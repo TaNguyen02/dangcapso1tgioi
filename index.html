@@ -559,11 +559,9 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY (ĐÃ THÊM TÍNH NĂNG XÓA API IMGBB)
+// GALLERY (ĐÃ TÍCH HỢP IMGBB API BẠN CUNG CẤP)
 // =====================================================
-
-// BẠN HÃY DÁN API KEY CỦA IMGBB VÀO DÒNG DƯỚI ĐÂY NHÉ:
-const IMGBB_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
+const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ec";
 
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Gallery</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Add Photo</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
@@ -575,12 +573,8 @@ const Gallery = {
   
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
-    if(IMGBB_API_KEY === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
-      alert("Hãy dán API Key của ImgBB vào code trước nhé!");
-      return;
-    }
     const cap=prompt('Caption:','')||'A new memory';
-    toast('Đang tải ảnh lên ImgBB... ⏳');
+    toast('Đang tải ảnh lên máy chủ... ⏳');
     
     const formData = new FormData();
     formData.append('image', f);
@@ -859,3 +853,4 @@ initFirebaseSync();
 </script>
 </body>
 </html>
+"Tân, Hồng, Trang, Quyết"
