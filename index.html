@@ -471,23 +471,78 @@ const Polls = {
 };
 
 // =====================================================
-// STORIES
+// STORIES (BẢN VÁ LỖI AN TOÀN)
 // =====================================================
 const Stories = {
-  render(){const el=document.getElementById('m-stories');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Tales</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Cancel':'+ New Tale'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to share a story</div>`:''}
-  <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${Stories.listHTML()}</div></div>`;},
+  render(){
+    const el=document.getElementById('m-stories');const can=!!S.user;
+    el.innerHTML=`<div class="mh"><div class="mt">Tales</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Cancel':'+ New Tale'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to share a story</div>`:''}
+    <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${Stories.listHTML()}</div></div>`;
+  },
   pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ New Entry</div>
   <div class="fg"><label class="fl">Title</label><input class="fi" id="sf-t" placeholder="Give your story a name..."></div>
   <div class="fg"><label class="fl">Story</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Begin your tale here..."></textarea></div>
   <div class="fg"><label class="fl">Tags</label><input class="fi" id="sf-g" placeholder="music, nights, memories..."></div>
   <button class="btn-p" onclick="Stories.post()">Publish Story</button></div>`},
-  listHTML(){if(!S.stories.length)return`<div class="empty-st"><p>No stories yet.</p></div>`;return S.stories.slice().reverse().map(s=>{const ini=s.author.substring(0,2).toUpperCase();const liked=S.user&&s.likedBy.includes(S.user.name);return`<div class="story-card" onclick="Stories.detail(${s.id})"><div class="sc-title">${s.title}</div><div class="sc-excerpt">${s.content.replace(/\n/g,' ').substring(0,120)}...</div><div class="sc-meta"><div class="sc-author"><div class="sc-avi">${ini}</div>${s.author} · ${s.date}</div><button class="lbtn ${liked?'liked':''}" onclick="event.stopPropagation();Stories.like(${s.id})">♥ ${s.likes}</button></div>${s.tags&&s.tags.length?`<div class="tags-row" style="margin-top:10px">${s.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>`:''}</div>`;}).join('')},
+  listHTML(){
+    // Ép kiểu S.stories luôn luôn là một mảng để tránh lỗi .slice()
+    let arr = [];
+    if (Array.isArray(S.stories)) { arr = S.stories; }
+    else if (typeof S.stories === 'object' && S.stories !== null) { arr = Object.values(S.stories); }
+
+    if(!arr.length) return`<div class="empty-st"><p>No stories yet.</p></div>`;
+
+    return arr.slice().reverse().map(s=>{
+      // Các chốt chặn (Fallback) nếu dữ liệu bị hỏng hoặc thiếu
+      const author = s.author || 'Unknown';
+      const ini = author.substring(0,2).toUpperCase();
+      const likedBy = s.likedBy || []; 
+      const likes = s.likes || 0;
+      const liked = S.user && likedBy.includes(S.user.name);
+      const tags = s.tags || [];
+      const content = s.content || '';
+
+      return`<div class="story-card" onclick="Stories.detail(${s.id})"><div class="sc-title">${s.title}</div><div class="sc-excerpt">${content.replace(/\n/g,' ').substring(0,120)}...</div><div class="sc-meta"><div class="sc-author"><div class="sc-avi">${ini}</div>${author} · ${s.date}</div><button class="lbtn ${liked?'liked':''}" onclick="event.stopPropagation();Stories.like(${s.id})">♥ ${likes}</button></div>${tags.length?`<div class="tags-row" style="margin-top:10px">${tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>`:''}</div>`;
+    }).join('')
+  },
   togglePost(){S.postOpen=!S.postOpen;Stories.render()},
-  post(){const t=(document.getElementById('sf-t')||{}).value||'';const c=(document.getElementById('sf-c')||{}).value||'';if(!t.trim()||!c.trim()){toast('Fill title and story!');return}const tags=((document.getElementById('sf-g')||{}).value||'').split(',').map(x=>x.trim()).filter(Boolean);S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0],likes:0,likedBy:[],tags});S.save('stories',S.stories);S.postOpen=false;Stories.render();toast('Published! ✨')},
-  like(id){if(!S.user){toast('Sign in to like');return}const s=S.stories.find(x=>x.id===id);if(!s)return;const i=s.likedBy.indexOf(S.user.name);if(i>-1){s.likedBy.splice(i,1);s.likes=Math.max(0,s.likes-1)}else{s.likedBy.push(S.user.name);s.likes++}S.save('stories',S.stories);document.getElementById('sl').innerHTML=Stories.listHTML()},
-  detail(id){const s=S.stories.find(x=>x.id===id);if(s)App.openOver('story',s)},
-  renderDetail(s){document.getElementById('m-story').innerHTML=`<div class="mh"><div class="mt" style="font-size:1.15rem;flex:1">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div><div class="mb"><div class="sfull">${s.content.replace(/\n/g,'<br>')}</div><div class="sfull-meta"><div>By ${s.author}</div><div>${s.date}</div></div></div>`}
+  post(){
+    const t=(document.getElementById('sf-t')||{}).value||'';
+    const c=(document.getElementById('sf-c')||{}).value||'';
+    if(!t.trim()||!c.trim()){toast('Fill title and story!');return}
+    const tags=((document.getElementById('sf-g')||{}).value||'').split(',').map(x=>x.trim()).filter(Boolean);
+    
+    // Đảm bảo S.stories là mảng trước khi lưu
+    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
+
+    S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0],likes:0,likedBy:[],tags});
+    S.save('stories',S.stories);
+    S.postOpen=false;
+    Stories.render();
+    toast('Published! ✨')
+  },
+  like(id){
+    if(!S.user){toast('Sign in to like');return}
+    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
+    const s=S.stories.find(x=>x.id===id);
+    if(!s)return;
+    if(!s.likedBy) s.likedBy = []; // Sửa lỗi mảng like bị rỗng
+    const i=s.likedBy.indexOf(S.user.name);
+    if(i>-1){s.likedBy.splice(i,1);s.likes=Math.max(0,(s.likes||0)-1)}
+    else{s.likedBy.push(S.user.name);s.likes=(s.likes||0)+1}
+    S.save('stories',S.stories);
+    document.getElementById('sl').innerHTML=Stories.listHTML()
+  },
+  detail(id){
+    if(!Array.isArray(S.stories)) return;
+    const s=S.stories.find(x=>x.id===id);
+    if(s)App.openOver('story',s)
+  },
+  renderDetail(s){
+    const content = s.content || '';
+    document.getElementById('m-story').innerHTML=`<div class="mh"><div class="mt" style="font-size:1.15rem;flex:1">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div><div class="mb"><div class="sfull">${content.replace(/\n/g,'<br>')}</div><div class="sfull-meta"><div>By ${s.author}</div><div>${s.date}</div></div></div>`
+  }
 };
 
 // =====================================================
