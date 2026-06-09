@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EXAM ONLINE</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐶</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -14,231 +14,326 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  /* === ĐÃ ĐỔI SANG MÀU KEM SÁNG === */
-  --bg:#FFF8E1; 
-  --s1:#FFFFFF;--s2:#F8FAFC;
-  --p:#8B5CF6;--pl:#A78BFA;--pd:rgba(139,92,246,.12);--pb:rgba(139,92,246,.25);
-  --amber:#D97706;--al:#F59E0B;--ad:rgba(217,119,6,.12);
-  --rose:#E11D48;--rd:rgba(225,29,72,.12);
-  --em:#059669;--ed:rgba(5,150,105,.12);
-  /* Đổi chữ sang màu tối để hiển thị rõ trên nền kem */
-  --txt:#1E293B;
-  --tm:#475569;
-  --td:#94A3B8;
-  --bdr:rgba(0,0,0,0.08);--bdrh:rgba(139,92,246,.5);
+  /* === LIGHT THEME (Cho Mèo - NỀN KEM SÁNG) === */
+  --bg-light: #FFF8E1; 
+  --txt-light: #1E293B;
+  --bdr-light: rgba(0,0,0,0.08);
+  --modal-bg-light: #FFFFFF;
+
+  /* === DARK THEME (Cho Chó Golden - NỀN TỐI) === */
+  --bg-dark: #111827; 
+  --txt-dark: #F1F5F9;
+  --bdr-dark: rgba(255,255,255,0.08);
+  --modal-bg-dark: #1F2937;
+
+  /* === MẶC ĐỊNH Ban đầu (LIGHT) === */
+  --bg: var(--bg-light);
+  --txt: var(--txt-light);
+  --bdr: var(--bdr-light);
+  --modal-bg: var(--modal-bg-light);
+  
+  --tm: #475569; 
+  --td: #94A3B8; 
+  
+  --p:#7c3aed;--pl:#8b5cf6;--pd:rgba(124,58,237,0.08);--pb:rgba(124,58,237,0.15);
+  --amber:#d97706;--al:#f59e0b;--ad:rgba(217,119,6,0.08);
+  --rose:#db2777;--rd:rgba(219,39,119,0.08);
+  --em:#059669;--ed:rgba(5,150,105,0.08);
+  
+  --bdrh: rgba(124,58,237,0.4);
+  
   --r:16px;--rl:24px;
-  --sh:0 16px 40px rgba(0,0,0,.08);
-  --gp:0 0 32px rgba(139,92,246,.2);
+  --sh: 0 10px 40px rgba(15,23,42,0.1); 
+  --gp:0 0 32px rgba(124,58,237,0.2);
   --tr:all .3s cubic-bezier(.34,1.56,.64,1);
 }
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
 
-/* === CAT BACKGROUND (MÈO TO HƠN, MÀU ĐẬM, MẮT TRÒN) === */
-#cat-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.6; transition: opacity 0.5s; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
-#cat-bg.on { opacity: 1; }
-/* Phóng to con mèo lên 1.6 lần */
-.cat { position: relative; width: 280px; height: 240px; transform: scale(1.6); }
+/* === DARK THEME CLASS === */
+body.dark-mode {
+  --bg: var(--bg-dark);
+  --txt: var(--txt-dark);
+  --bdr: var(--bdr-dark);
+  --modal-bg: var(--modal-bg-dark);
+  --tm: #94A3B8;
+  --sh: 0 10px 40px rgba(0,0,0,0.3);
+}
 
-/* Face & Tuxedo white patch - Đổi sang màu đen đậm (#050505) */
+html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased; transition: background-color 0.4s ease, color 0.4s ease;}
+
+/* === ANIMAL BACKGROUND CONTAINER === */
+#animal-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.6; transition: opacity 0.5s; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
+#animal-bg.on { opacity: 1; }
+.animal-container { position: relative; width: 280px; height: 240px; transform: scale(1.1); display: none; }
+.animal-container.active { display: block; }
+
+/* =========================================
+   === CAT CSS (Mèo đen đậm, mắt tròn, LƯỠI CHUẨN) === 
+   ========================================= */
 .cat-face { position: absolute; inset: 0; background: #050505; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.8); }
-.cat-tuxedo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 130px; height: 95px; background: #FFFFFF; border-radius: 50% 50% 0 0; }
+.cat-tuxedo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 140px; height: 110px; background: #FFFFFF; border-radius: 50% 50% 0 0; }
+.cat .ear { position: absolute; top: -25px; width: 75px; height: 85px; background: #050505; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: -1; }
+.cat .ear.left { left: 15px; transform: rotate(-25deg); }
+.cat .ear.right { right: 15px; transform: rotate(25deg); }
+.cat .ear-inner { position: absolute; inset: 15px 15px 0 15px; background: #fbcfe8; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.cat .whisker-l, .cat .whisker-r { position: relative; width: 65px; height: 2px; background: rgba(255,255,255,0.3); border-radius: 2px; }
+.cat .whisker-l::before, .cat .whisker-l::after, .cat .whisker-r::before, .cat .whisker-r::after { content: ''; position: absolute; width: 65px; height: 2px; background: rgba(255,255,255,0.3); left: 0; border-radius: 2px;}
+.cat .whisker-l { transform: rotate(10deg); left: -15px; }
+.cat .whisker-l::before { top: -15px; transform: rotate(10deg); }
+.cat .whisker-l::after { top: 15px; transform: rotate(-10deg); }
+.cat .whisker-r { transform: rotate(-10deg); right: -15px; }
+.cat .whisker-r::before { top: -15px; transform: rotate(-10deg); }
+.cat .whisker-r::after { top: 15px; transform: rotate(10deg); }
 
-/* Ears - Đổi sang màu đen đậm */
-.ear { position: absolute; top: -25px; width: 75px; height: 85px; background: #050505; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: -1; }
-.ear.left { left: 15px; transform: rotate(-25deg); }
-.ear.right { right: 15px; transform: rotate(25deg); }
-.ear-inner { position: absolute; inset: 15px 15px 0 15px; background: #fbcfe8; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+/* Mõm mèo bọc lại để lưỡi thò ra từ trong khe mồm */
+.cat .nose-mouth { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.cat .nose { width: 22px; height: 14px; background: #f472b6; border-radius: 50% 50% 45% 45%; margin-bottom: -2px; z-index: 4; position: relative; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
+.cat .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3;}
+/* Thêm background trắng cho mép để che gốc lưỡi */
+.cat .mouth-l, .cat .mouth-r { width: 22px; height: 12px; border-bottom: 3px solid #050505; border-radius: 0 0 15px 15px; transition: var(--tr); background: #FFFFFF; }
+.cat .mouth-l { border-right: 3px solid #050505; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; transform: rotate(15deg); margin-right:-2px; }
+.cat .mouth-r { border-left: 3px solid #050505; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; transform: rotate(-15deg); margin-left:-2px;}
+/* Lưỡi được giấu bằng z-index -1, nằm dưới mép */
+.cat .tongue { position: absolute; top: 6px; width: 20px; height: 0; background: #fb7185; border-radius: 0 0 10px 10px; left: 50%; transform: translateX(-50%); transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
+.cat.teasing .tongue { height: 28px; }
 
-/* Slanted Cat Eyes - LÒNG ĐEN HÌNH TRÒN */
+/* =========================================
+   === DOG CSS (GOLDEN, LƯỠI CHUẨN TỪ MIỆNG) === 
+   ========================================= */
+.dog-face { position: absolute; inset: 0; background: #EAB308; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.3); }
+.dog-snout { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 150px; height: 95px; background: #FDE047; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; box-shadow: 0 -3px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; padding-top: 10px;}
+
+/* Dog Ears (Tai cụp Golden) */
+.dog .ear { position: absolute; top: 10px; width: 85px; height: 150px; background: #CA8A04; border-radius: 40% 40% 50% 50% / 30% 30% 70% 70%; z-index: -1; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.dog .ear.left { left: -10px; transform: rotate(15deg); transform-origin: top right; }
+.dog .ear.right { right: -10px; transform: rotate(-15deg); transform-origin: top left; }
+.dog.happy .ear.left { transform: rotate(35deg) translateY(-5px); }
+.dog.happy .ear.right { transform: rotate(-35deg) translateY(-5px); }
+
+/* Mõm, mũi, miệng Chó */
+.dog-nose { width: 40px; height: 25px; background: #1C1917; border-radius: 40% 40% 60% 60%; box-shadow: inset 0 -3px 5px rgba(255,255,255,0.15); z-index: 4; position: relative;}
+.dog .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3; margin-top: -2px;}
+/* Thêm nền vàng nhạt cho mép chó để che gốc lưỡi */
+.dog .mouth-l, .dog .mouth-r { width: 35px; height: 18px; border-bottom: 4px solid #1C1917; border-radius: 0 0 20px 20px; transition: var(--tr); background: #FDE047;}
+.dog .mouth-l { border-right: 4px solid #1C1917; transform: rotate(15deg); border-bottom-right-radius: 25px; margin-right: -2px;}
+.dog .mouth-r { border-left: 4px solid #1C1917; transform: rotate(-15deg); border-bottom-left-radius: 25px; margin-left: -2px;}
+
+/* Lưỡi chó nằm chìm bên dưới khe mồm (z-index: -1) */
+.dog-tongue { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 34px; height: 0; background: #F43F5E; border-radius: 0 0 17px 17px; transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1;}
+.dog-tongue::after { content:''; position: absolute; top: 0; left: 16px; bottom: 5px; width: 2px; background: rgba(0,0,0,0.1); }
+.dog.happy .dog-tongue { height: 45px;}
+
+/* =========================================
+   === SHARED EYES CSS (MẮT TRÒN ĐẢO THEO CHUỘT) === 
+   ========================================= */
 .eye-wrap { position: absolute; top: 80px; display: flex; gap: 45px; left: 50%; transform: translateX(-50%); }
-.eye { position: relative; width: 55px; height: 55px; background: #fde047; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(217, 119, 6, 0.6); }
-/* Đồng tử tròn xoe */
-.pupil { position: absolute; width: 30px; height: 30px; background: #000; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: all 0.05s ease-out; }
+.eye { position: relative; width: 55px; height: 55px; border-radius: 50%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(0,0,0,0.2); }
+/* Mắt mèo */
+.cat .eye { background: #fde047; } 
+/* Mắt chó (To hơn chút, màu trắng viền nâu) */
+.dog .eye-wrap { top: 75px; gap: 50px; }
+.dog .eye { width: 45px; height: 45px; background: #ffffff; border-color: #CA8A04; border-width: 4px;}
+
+.pupil { position: absolute; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: all 0.05s ease-out; }
+.cat .pupil { width: 30px; height: 30px; background: #000; }
+.dog .pupil { width: 22px; height: 22px; background: #1C1917; }
 .pupil::after { content:''; position: absolute; top: 5px; left: 5px; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
 
-/* Teasing expression */
-.cat.teasing .eye { transform: scaleY(0.15) translateY(40px); background: #fff; }
+/* Híp mắt sung sướng */
+.animal-container.teasing .eye, .animal-container.happy .eye { transform: scaleY(0.1) translateY(40px); }
+.dog.happy .eye { background: #1C1917; border-color: transparent; }
 
-/* Whiskers - Điều chỉnh màu ria mép cho nổi bật trên nền đen */
-.whiskers { position: absolute; top: 135px; width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none; }
-.whisker-l, .whisker-r { position: relative; width: 65px; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px; }
-.whisker-l::before, .whisker-l::after, .whisker-r::before, .whisker-r::after { content: ''; position: absolute; width: 65px; height: 2px; background: rgba(255,255,255,0.4); left: 0; border-radius: 2px;}
-.whisker-l { transform: rotate(10deg); left: -15px; }
-.whisker-l::before { top: -15px; transform: rotate(10deg); }
-.whisker-l::after { top: 15px; transform: rotate(-10deg); }
-.whisker-r { transform: rotate(-10deg); right: -15px; }
-.whisker-r::before { top: -15px; transform: rotate(-10deg); }
-.whisker-r::after { top: 15px; transform: rotate(10deg); }
-
-/* Nose, Mouth, Tongue */
-.nose-mouth { position: absolute; top: 145px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; }
-.nose { width: 18px; height: 12px; background: #f472b6; border-radius: 50% 50% 45% 45%; margin-bottom: 3px; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
-.mouth-wrap { display: flex; justify-content: center; position: relative; }
-.mouth-l, .mouth-r { width: 20px; height: 12px; border-bottom: 3px solid #1a1a1a; border-radius: 0 0 15px 15px; transition: var(--tr); }
-.mouth-l { border-right: 3px solid #1a1a1a; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; transform: rotate(15deg); }
-.mouth-r { border-left: 3px solid #1a1a1a; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; transform: rotate(-15deg); margin-left:-2px;}
-
-.tongue { position: absolute; top: 11px; width: 22px; height: 0; background: #fb7185; border-radius: 0 0 11px 11px; left: 50%; transform: translateX(-50%); transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
-.tongue::after { content:''; position: absolute; top: 0; left: 10px; bottom: 4px; width: 2px; background: rgba(0,0,0,0.1); }
-.cat.teasing .tongue { height: 30px; }
-.cat.teasing .mouth-l, .cat.teasing .mouth-r { border-color: transparent; }
-
-/* === HEADER, LOGO, AUTH (Chuyển sang nền kem) === */
-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,rgba(255,248,225,.9) 0%,transparent 100%);pointer-events:auto}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--p),var(--rose));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(139,92,246,.3)}
+/* === HEADER, LOGO, AUTH === */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);pointer-events:auto; transition: background 0.4s ease;}
+.logo-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--p),var(--rose));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(124,58,237,0.3)}
 .logo-gem svg{width:18px;height:18px;color:#fff}
-#auth-area{pointer-events:auto}
-.btn-si{display:flex;align-items:center;gap:8px;padding:10px 24px;background:#FFFFFF;border:1px solid var(--bdr);border-radius:40px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);backdrop-filter:blur(16px);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.btn-si:hover{background:var(--pd);border-color:var(--p);transform:translateY(-2px)}
-.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:#FFFFFF;border:1px solid var(--bdr);border-radius:40px;cursor:pointer;backdrop-filter:blur(16px);transition:var(--tr);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.btn-si{display:flex;align-items:center;gap:8px;padding:10px 24px;background:var(--modal-bg);border:1px solid var(--bdr);border-radius:40px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);box-shadow: 0 2px 10px rgba(0,0,0,0.05);backdrop-filter:blur(16px)}
+.btn-si:hover{background:var(--pd);border-color:var(--p);transform:translateY(-2px);box-shadow: 0 5px 15px rgba(124,58,237,0.15)}
+.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:var(--modal-bg);border:1px solid var(--bdr);border-radius:40px;cursor:pointer;backdrop-filter:blur(16px);transition:var(--tr);box-shadow: 0 2px 10px rgba(0,0,0,0.05)}
 .user-pill:hover{border-color:var(--p);background:var(--pd)}
-.avi{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow: 0 2px 6px rgba(0,0,0,0.1)}
+.avi{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow:hidden; position:relative;}
+.avi img {width:100%;height:100%;object-fit:cover;}
 .u-name-status{display:flex;flex-direction:column}
 .u-name{font-size:.85rem;font-weight:600;color:var(--txt)}
 .u-status{font-size:.7rem;color:var(--tm);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.btn-so{padding:5px 12px;background:var(--rd);border:1px solid rgba(225,29,72,0.2);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
-.btn-so:hover{background:rgba(225,29,72,0.15);transform:scale(1.05)}
+.btn-so{padding:5px 12px;background:var(--rd);border:1px solid rgba(219,39,119,0.2);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
+.btn-so:hover{background:rgba(219,39,119,0.15);transform:scale(1.05)}
 
-/* === ORBIT CARDS (Chuyển sang thiết kế nền sáng) === */
+/* === ORBIT CARDS (GIỮ NGUYÊN TIÊU ĐỀ MENU GỐC) === */
 #orbit-container{position:fixed;inset:0;z-index:20;pointer-events:none;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,600px) minmax(200px,1fr);grid-template-rows:1fr;padding:100px 40px 60px}
 .sidebar{display:flex;flex-direction:column;justify-content:space-around;gap:20px;pointer-events:none}
 .left-sidebar{grid-column:1;align-items:start}
 .right-sidebar{grid-column:3;align-items:end}
 .cw{pointer-events:auto;width:100%;max-width:240px}
-.orbit-card{width:100%;padding:16px 20px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.06);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.06)}
+
+.orbit-card{width:100%;padding:16px 20px;background:rgba(255,255,255,0.85);border:1px solid var(--bdr);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.05)}
+body.dark-mode .orbit-card { background: rgba(31,41,55,0.7); }
 .orbit-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.5) 0%,transparent 100%);pointer-events:none}
-.orbit-card:hover{border-color:var(--p);box-shadow:var(--gp), 0 10px 40px rgba(139,92,246,.1);transform:translateY(-4px);background:#FFFFFF}
+.orbit-card:hover{border-color:var(--p);box-shadow:var(--gp), 0 10px 40px rgba(139,92,246,.1);transform:translateY(-4px);background:var(--modal-bg)}
+body.dark-mode .orbit-card:hover { background: rgba(31,41,55,0.9); }
 .orbit-card:active{transform:scale(.96)}
+
 .ci-wrap{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ci-polls{background:rgba(225,29,72,0.1);color:var(--rose)}
+.ci-polls{background:rgba(219,39,119,0.1);color:var(--rose)}
 .ci-tales{background:var(--pd);color:var(--p)}
 .ci-cal{background:var(--ed);color:var(--em)}
 .ci-gallery{background:rgba(217,119,6,0.1);color:var(--amber)}
 .ci-vis{background:var(--ad);color:var(--amber)}
-.ci-profile{background:rgba(0,0,0,0.06);color:var(--tm)}
+.ci-profile{background:rgba(71,85,105,0.1);color:var(--tm)}
 .ci-wrap svg{width:22px;height:22px}
 .card-text{display:flex;flex-direction:column;text-align:left}
 .c-title{font-size:.95rem;font-weight:600;color:var(--txt);margin-bottom:2px}
 .c-desc{font-size:.7rem;color:var(--tm);font-weight:400}
 
-/* === OVERLAY & MODALS (Nền sáng) === */
-#ov{position:fixed;inset:0;z-index:200;background:rgba(255,248,225,0.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;pointer-events:auto}
-#ov.on{display:flex;animation:fi .2s ease}
-@keyframes fi{from{opacity:0}to{opacity:1}}
-.modal{display:none;flex-direction:column;background:#FFFFFF;border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,0.15),var(--gp);position:relative}
+/* === OVERLAY & MODALS === */
+#ov{position:fixed;inset:0;z-index:200;background:rgba(15,23,42,0.6);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;pointer-events:auto}
+#ov.on{display:flex;}
+.modal{display:none;flex-direction:column;background:var(--modal-bg);border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 30px 90px rgba(15,23,42,0.2),var(--gp);position:relative}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--pl),transparent);z-index:1}
 .modal.on{display:flex;animation:su .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes su{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.mh{padding:26px 30px 22px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.mh{padding:26px 30px 22px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
 .mt{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--txt)}
-.mha{display:flex;align-items:center;gap:10px}
-.mbtn-x{width:34px;height:34px;border:1px solid rgba(0,0,0,0.08);border-radius:50%;background:#F8FAFC;color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.mbtn-x{width:34px;height:34px;border:1px solid var(--bdr);border-radius:50%;background:rgba(0,0,0,0.05);color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+body.dark-mode .mbtn-x { background: #374151; color:#fff;}
 .mbtn-x:hover{border-color:var(--rose);color:var(--rose);transform:rotate(90deg);background:var(--rd)}
 .mb{flex:1;overflow-y:auto;padding:26px 30px}
 .mb::-webkit-scrollbar{width:5px}
-.mb::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:4px}
+.mb::-webkit-scrollbar-thumb{background:rgba(15,23,42,0.1);border-radius:4px}
+body.dark-mode .mb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
 
 /* === FORMS, BUTTONS === */
 .fg{margin-bottom:16px}
 .fl{display:block;font-size:.72rem;font-weight:600;color:var(--tm);margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
-.fi,.fta{width:100%;padding:11px 15px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.1);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
-.fi:focus,.fta:focus{border-color:var(--p);background:#FFF;box-shadow:0 0 0 3px var(--pd)}
+.fi,.fta{width:100%;padding:11px 15px;background:var(--bg);border:1px solid var(--bdr);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
+body.dark-mode .fi, body.dark-mode .fta { background: #111827; }
+.fi:focus,.fta:focus{border-color:var(--p);background:var(--modal-bg);box-shadow:0 0 0 3px var(--pd)}
+.fi:disabled{opacity: 0.6; cursor: not-allowed;}
 .fta{min-height:90px}
 .btn-p{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),#6d28d9);border:none;border-radius:13px;color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--tr);margin-top:4px}
-.btn-p:hover{box-shadow:0 6px 24px rgba(139,92,246,0.3);transform:translateY(-2px);filter:brightness(1.1)}
-.btn-s{padding:9px 20px;background:#F8FAFC;border:1px solid rgba(0,0,0,0.08);border-radius:11px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)}
+.btn-p:hover{box-shadow:0 6px 20px rgba(124,58,237,0.3);transform:translateY(-2px);filter:brightness(1.05)}
+.btn-s{padding:9px 20px;background:var(--bg);border:1px solid var(--bdr);border-radius:11px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)}
+body.dark-mode .btn-s { background: #374151; }
 .btn-s:hover{background:var(--pd);border-color:var(--p);transform:translateY(-1px)}
-.atabs{display:flex;gap:4px;background:rgba(0,0,0,0.04);border-radius:12px;padding:4px;margin-bottom:24px}
-.atab{flex:1;padding:10px;border:none;background:transparent;border-radius:10px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:var(--tr)}
-.atab.on{background:#FFF;color:var(--p);border:1px solid rgba(139,92,246,0.3);box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.atab:not(.on):hover{background:rgba(0,0,0,0.03); color:var(--txt)}
-.err{padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#b91c1c;display:none}
+.atabs{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:24px;border:1px solid var(--bdr)}
+body.dark-mode .atabs { background: #111827; }
+.atab.on{background:var(--modal-bg);color:var(--p);border:1px solid rgba(124,58,237,0.2);box-shadow: 0 2px 6px rgba(0,0,0,0.05)}
+body.dark-mode .atab.on { background: #1F2937; color: var(--p); border-color: rgba(124,58,237,0.3); }
+.atab:not(.on):hover {color: var(--txt); background: rgba(0,0,0,0.02);}
+.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#b91c1c;padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;display:none}
 .err.on{display:block}
-.hint{font-size:.8rem;color:var(--tm);text-align:center;margin-top:16px}
-.hint a{color:var(--p);cursor:pointer;text-decoration:none;font-weight:600}
-.info-banner{background:var(--pd);border:1px solid var(--bdrh);border-radius:12px;padding:14px 18px;font-size:.85rem;color:var(--p);margin-bottom:20px;text-align:center}
-.post-box{background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.15);border-radius:14px;padding:20px;margin-bottom:24px}
+.info-banner{background:var(--pd);border:1px solid rgba(124,58,237,0.2);border-radius:12px;color:var(--p);padding:14px 18px;font-size:.85rem;margin-bottom:20px;text-align:center}
+.post-box{background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.1);border-radius:14px;padding:20px;margin-bottom:24px}
+body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.1); }
 .post-box-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
-/* === COMMENT SYSTEM CSS === */
-.comment-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.06); }
+/* === COMMENT SYSTEM === */
+.comment-section { border-top-color: var(--bdr); margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--bdr); }
 .comment-title { font-size: 1rem; font-weight: 600; color: var(--txt); margin-bottom: 16px; }
 .comment-list { margin-bottom: 20px; }
-.comment-item { display: flex; gap: 12px; margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.04) }
-.comment-avi { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; flex-shrink: 0; box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.comment-item { display: flex; gap: 12px; margin-bottom: 14px; background: var(--bg); padding: 10px; border-radius: 10px; border: 1px solid var(--bdr); }
+.comment-avi { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; flex-shrink: 0; box-shadow:0 2px 4px rgba(0,0,0,0.1); overflow:hidden}
+.comment-avi img {width:100%;height:100%;object-fit:cover;}
 .comment-right { flex: 1; }
 .comment-meta { font-size: 0.72rem; color: var(--tm); margin-bottom: 3px; display: flex; justify-content: space-between; }
 .comment-text { font-size: 0.82rem; color: var(--txt); line-height: 1.5; }
 .comment-form { display: flex; gap: 10px; align-items: flex-start; }
-.comment-input { flex: 1; padding: 10px 14px; background: #FFF; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; color: var(--txt); font-family: inherit; font-size: 0.85rem; outline: none; resize: none; min-height: 40px; transition: var(--tr); }
-.comment-input:focus { border-color: var(--p); }
+.comment-input { flex: 1; padding: 10px 14px; background: var(--modal-bg); border: 1px solid var(--bdr); border-radius: 10px; color: var(--txt); font-family: inherit; font-size: 0.85rem; outline: none; resize: none; min-height: 40px; transition: var(--tr); }
+.comment-input:focus { border-color: var(--p); background: var(--modal-bg);}
 .btn-comment { padding: 9px 16px; background: var(--p); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--tr); box-shadow:0 2px 6px rgba(139,92,246,0.3)}
 .btn-comment:hover { opacity: 0.9; transform: translateY(-1px); }
 
-/* === STORIES === */
-.story-card{background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.03)}
-.story-card:hover{border-color:var(--p);background:var(--pd);transform:translateX(4px);box-shadow:0 8px 20px rgba(139,92,246,0.08)}
+/* === TALES & GALLERY === */
+.story-card{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer;box-shadow: 0 2px 8px rgba(0,0,0,0.04);}
+.story-card:hover{border-color:var(--p);background:var(--pd);transform:translateX(4px);box-shadow: 0 5px 15px rgba(124,58,237,0.08)}
 .sc-excerpt{font-size:.85rem;color:var(--tm);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-/* === GALLERY === */
 .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--bdr);cursor:pointer}
 .pc img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .pc:hover img{transform:scale(1.08)}
-#m-lbx.on { width: min(1200px, 95vw); display: flex; flex-direction: row; background: #FFF;}
-.lbx-main { flex: 2; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid rgba(0,0,0,0.06); position:relative}
+#m-lbx.on { width: min(1200px, 95vw); display: flex; flex-direction: row; background: var(--modal-bg);}
+.lbx-main { flex: 2; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid var(--bdr); position:relative}
 .lbx-side { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
-.lbx-img { max-width: 100%; max-height: 70vh; border-radius: 14px; object-fit: contain; }
+.lbx-img { max-width: 100%; max-height: 70vh; border-radius: 14px; object-fit: contain; box-shadow:0 10px 30px rgba(0,0,0,0.1)}
 
 /* === VISIONS === */
 .ptl{position:relative;padding-left:44px}
-.ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:rgba(0,0,0,0.08)}
+.ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:var(--bdr)}
 .pi{position:relative;margin-bottom:24px}
-.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid #FFF;box-shadow:0 0 10px rgba(217,119,6,.4)}
-.pc2{background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:20px;transition:var(--tr);box-shadow:0 4px 15px rgba(0,0,0,0.03)}
+.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid var(--modal-bg);box-shadow:0 0 10px rgba(217,119,6,0.3)}
+.pc2{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:20px;transition:var(--tr);box-shadow: 0 2px 8px rgba(0,0,0,0.04)}
 .pc2:hover{border-color:var(--al);background:rgba(217,119,6,0.04);transform:translateX(4px)}
 
 /* === CALENDAR === */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:16px}
 .cdh{text-align:center;font-size:.65rem;color:var(--td);text-transform:uppercase;letter-spacing:.08em;padding:6px 0;font-weight:700}
-.cd{aspect-ratio:1;border-radius:10px;border:1px solid rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--tm);transition:all .2s ease;position:relative;background:#FFF}
-.cd:hover:not(.empty){border-color:var(--p);color:var(--p);background:var(--pd)}
-.cd.today{border-color:var(--p);color:var(--p);background:var(--pd)}
+.cd{aspect-ratio:1;border-radius:10px;border:1px solid var(--bdr);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--tm);transition:all .2s ease;position:relative;background:var(--modal-bg)}
+.cd:hover:not(.empty){border-color:var(--p);background:var(--pd);color:var(--p)}
+.cd.today{border-color:var(--p);background:var(--pd);color:var(--p)}
 .cd.selected{border-color:var(--p)!important;background:var(--p)!important;color:#fff!important}
 .cd.selected .cdd {background:#fff!important;}
 .cd.past{opacity:.5}
 .cdd{width:5px;height:5px;border-radius:50%}
 
 /* === POLLS === */
-.poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:12px;background:#FFF;position:relative;overflow:hidden;transition:all .2s ease;user-select:none;box-shadow:0 2px 5px rgba(0,0,0,0.02)}
+.poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid var(--bdr);border-radius:12px;background:var(--modal-bg);position:relative;overflow:hidden;transition:all .2s ease;user-select:none;box-shadow: 0 2px 5px rgba(0,0,0,0.03)}
 .poll-option.voted{border-color:var(--p);background:var(--pd)}
-.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(139,92,246,0.1);pointer-events:none}
+.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(124,58,237,0.1);pointer-events:none}
+.poll-percentage { margin-right: 15px; font-weight: 700; color: var(--p); font-size: 1.1rem;}
 
 /* === BIRTHDAY & SPIRITUAL === */
-.spiri-section { background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+.spiri-section { background: rgba(124,58,237,0.05); border: 1px solid rgba(124,58,237,0.15); border-radius: 16px; padding: 20px; margin-bottom: 24px; color:var(--p)}
 .spiri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.spiri-item { text-align: center; background: #FFF; padding: 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow:0 2px 8px rgba(0,0,0,0.02)}
+.spiri-item { text-align: center; background: var(--modal-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--bdr); box-shadow:0 2px 8px rgba(0,0,0,0.02)}
 .spiri-val { font-size: 1.8rem; font-weight: 700; color: var(--p); margin-bottom: 4px; }
 .spiri-val.zodiac-emoji { font-size: 2.5rem; }
 .spiri-lbl { font-size: 0.72rem; color: var(--tm); text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* === PROFILE CUSTOMIZATION === */
+/* === PROFILE === */
+.profile-avi-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
+.profile-avi { width: 100px; height: 100px; border-radius: 50%; background: var(--p); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #fff; font-weight: 700; overflow: hidden; border: 4px solid var(--modal-bg); box-shadow: 0 5px 20px rgba(0,0,0,0.1); cursor: pointer;}
+.profile-avi img { width: 100%; height: 100%; object-fit: cover; }
+.avi-edit-overlay { position: absolute; inset:0; background:rgba(0,0,0,0.6); color:#fff; display:none; align-items:center; justify-content:center; font-size: 0.7rem; text-transform:uppercase; letter-spacing:1px; font-weight:600; border-radius: 50%; pointer-events: none;}
+.profile-avi:hover .avi-edit-overlay { display:flex; }
 .color-picker { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--tr); box-shadow:0 2px 5px rgba(0,0,0,0.2)}
 .color-dot.active { border-color: var(--txt); transform: scale(1.15); }
 
+.background-picker { display: flex; gap: 10px; margin-bottom: 20px;}
+.bg-option { flex: 1; padding: 15px; border: 2px solid var(--bdr); border-radius: 12px; cursor: pointer; text-align: center; transition: var(--tr); background: var(--bg);}
+body.dark-mode .bg-option { background: #374151;}
+.bg-option:hover { border-color: rgba(124,58,237,0.3); background: var(--pd);}
+.bg-option.active { border-color: var(--p); background: var(--pd); color: var(--p); font-weight: 600;}
+.bg-opt-icon { font-size: 1.5rem; margin-bottom: 5px; display: block;}
+
 /* === TOAST === */
-#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,0.3);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(124,58,237,0.3);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 #toast.on{transform:translateY(0);opacity:1}
 
-@media(max-width:640px){#orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}.sidebar{flex-direction:column;width:100%;padding:0}.orbit-card{padding:14px 16px}.pg{grid-template-columns:repeat(2,1fr)} #m-lbx.on{flex-direction:column; overflow-y:auto} .lbx-main{border-right:none; border-bottom:1px solid rgba(0,0,0,0.06)} .cat{width:200px; height:180px; transform: scale(1);}}
+@media(max-width:1024px){
+  #orbit-container{grid-template-columns:1fr 1fr; grid-template-rows:auto auto; padding: 100px 30px 40px; gap: 20px; justify-items: center;}
+  .left-sidebar{grid-column:1/3; grid-row:1; align-items:center; flex-direction:row; flex-wrap:wrap; justify-content:center; width:100%;}
+  .right-sidebar{grid-column:1/3; grid-row:2; align-items:center; flex-direction:row; flex-wrap:wrap; justify-content:center; width:100%;}
+  .cw { max-width: 280px; }
+}
+
+@media(max-width:640px){
+  .animal-container{transform: scale(1.0);} 
+  #orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}
+  .sidebar{flex-direction:column;width:100%;padding:0}
+  .cw { max-width: 100%; }
+  .orbit-card{padding:14px 16px}
+  .pg{grid-template-columns:repeat(2,1fr)} 
+  #m-lbx.on{flex-direction:column; overflow-y:auto} 
+  .lbx-main{border-right:none; border-bottom:1px solid var(--bdr)}
+}
 </style>
 </head>
 <body>
 
-<div id="cat-bg">
-  <div class="cat" id="tuxedo-cat">
+<div id="animal-bg">
+  
+  <div class="animal-container cat active" id="animal-cat">
     <div class="ear left"><div class="ear-inner"></div></div>
     <div class="ear right"><div class="ear-inner"></div></div>
     <div class="cat-face">
@@ -256,11 +351,31 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
         <div class="mouth-wrap">
           <div class="mouth-l"></div>
           <div class="mouth-r"></div>
+          <div class="tongue"></div>
         </div>
-        <div class="tongue"></div>
       </div>
     </div>
   </div>
+
+  <div class="animal-container dog" id="animal-dog">
+    <div class="ear left"></div>
+    <div class="ear right"></div>
+    <div class="dog-face">
+      <div class="dog-snout">
+        <div class="dog-nose"></div>
+        <div class="mouth-wrap">
+           <div class="mouth-l"></div>
+           <div class="mouth-r"></div>
+           <div class="dog-tongue"></div>
+        </div>
+      </div>
+      <div class="eye-wrap">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <header>
@@ -315,6 +430,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 
 <div id="toast"></div>
 
+<input type="file" id="avi-upload-input" accept="image/*" style="display:none" onchange="Profile.handleAviUpload(event)">
+
 <script>
 // =====================================================
 // API KEYS & FIREBASE INIT
@@ -341,8 +458,10 @@ const DB = {
 // STATE & UTILS
 // =====================================================
 const S = {
-  user:null, userFullData:null, stories:[], photos:[], plans:[], polls:[], avail:{}, comments:{}, stack:[], 
+  user:null, userFullData:null, stack:[], 
+  stories:[], photos:[], plans:[], polls:[], avail:{}, comments:{}, 
   authMode:'signin', calYear:new Date().getFullYear(), calMonth:new Date().getMonth(), selDay:null,
+  tempBg: 'cat', // Lưu tạm lựa chọn nền trong Profile
   save(k,v) { this[k]=v; DB.save(k,v); }
 };
 
@@ -359,11 +478,11 @@ function getIni(name){return name?name.split(' ').map(w=>w[0]).join('').slice(0,
 function formatDate(iso){if(!iso)return''; const d=new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
 
 // =====================================================
-// TUXEDO CAT INTERACTION (Đảo mắt và Lè lưỡi)
+// ANIMAL INTERACTION (Đảo mắt và Nũng nịu)
 // =====================================================
-const cat = document.getElementById('tuxedo-cat');
 const pupils = document.querySelectorAll('.pupil');
 
+// 1. Đảo mắt theo chuột
 document.addEventListener('mousemove', (e) => {
   if (S.stack.length > 0) return; 
   const { clientX: mouseX, clientY: mouseY } = e;
@@ -373,27 +492,49 @@ document.addEventListener('mousemove', (e) => {
     const eyeCenterY = rect.top + rect.height / 2;
     const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
     
-    // Giới hạn để con ngươi hình tròn không bị lẹm ra ngoài viền mắt
+    // Giới hạn để con ngươi hình tròn không lẹm ra ngoài mắt
     const distance = Math.min(10, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
-    
     pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle)*distance}px), calc(-50% + ${Math.sin(angle)*distance}px))`;
   });
 });
 
+// 2. Click menu -> Nũng nịu và Mở hộp thoại
 function teaseAndOpen(modalName) {
-  cat.classList.add('teasing');
-  setTimeout(() => cat.classList.remove('teasing'), 1000); 
+  const activeAnimal = document.querySelector('.animal-container.active');
+  if(activeAnimal) {
+    const actionClass = activeAnimal.classList.contains('dog') ? 'happy' : 'teasing';
+    activeAnimal.classList.add(actionClass);
+    setTimeout(() => activeAnimal.classList.remove(actionClass), 1000); 
+  }
   setTimeout(() => App.open(modalName), 300); 
+}
+
+// 3. Cập nhật Background dựa trên dữ liệu User
+function applyBackgroundSettings(bgType) {
+  const body = document.body;
+  const catContainer = document.getElementById('animal-cat');
+  const dogContainer = document.getElementById('animal-dog');
+
+  // Ẩn tất cả
+  document.querySelectorAll('.animal-container').forEach(el => el.classList.remove('active'));
+
+  if (bgType === 'dog') {
+    body.classList.add('dark-mode'); // Chọn Chó -> Nền tối
+    dogContainer.classList.add('active');
+  } else {
+    body.classList.remove('dark-mode'); // Chọn Mèo -> Nền sáng (mặc định)
+    catContainer.classList.add('active');
+  }
 }
 
 // =====================================================
 // APP CONTROL
 // =====================================================
 const App = {
-  open(name,data) { this.closeAll(); S.stack=[name]; const el=document.getElementById('m-'+name); if(!el) return; document.getElementById('ov').classList.add('on'); el.classList.add('on'); document.getElementById('cat-bg').classList.add('on'); this.render(name,data); },
+  open(name,data) { this.closeAll(); S.stack=[name]; const el=document.getElementById('m-'+name); if(!el) return; document.getElementById('ov').classList.add('on'); el.classList.add('on'); document.getElementById('animal-bg').classList.add('on'); this.render(name,data); },
   openOver(name,data) { const cur=document.querySelector('.modal.on'); if(cur) cur.classList.remove('on'); S.stack.push(name); const el=document.getElementById('m-'+name); document.getElementById('ov').classList.add('on'); el.classList.add('on'); this.render(name,data); },
   back() { S.stack.pop(); if(!S.stack.length){this.closeAll();return;} const prev=S.stack[S.stack.length-1]; document.querySelectorAll('.modal.on').forEach(m=>m.classList.remove('on')); const el=document.getElementById('m-'+prev); el.classList.add('on'); this.render(prev); },
-  closeAll() { document.getElementById('ov').classList.remove('on'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on')); document.getElementById('cat-bg').classList.remove('on'); S.stack=[]; S.postOpen=false; S.pollCreateOpen=false; S.addPlanOpen=false; },
+  closeAll() { document.getElementById('ov').classList.remove('on'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on')); document.getElementById('animal-bg').classList.remove('on'); S.stack=[]; S.postOpen=false; S.pollCreateOpen=false; S.addPlanOpen=false; },
   ovClick(e) { if(e.target===document.getElementById('ov')) this.closeAll(); },
   render(name,data) {
     if(name==='auth') Auth.render();
@@ -410,22 +551,31 @@ const App = {
     const a=document.getElementById('auth-area');
     if(S.user) { 
       const data = S.userFullData || {};
-      const ini=getIni(S.user.name); 
+      const ini=getIni(data.displayName || S.user.email); 
       const color = data.avatarColor || '#8B5CF6';
       const status = data.status || 'Đang trực tuyến';
+      const aviUrl = data.avatarUrl;
+
+      // Cập nhật giao diện nền ngay lập tức
+      applyBackgroundSettings(data.backgroundType || 'cat');
+
       a.innerHTML=`<div class="user-pill" onclick="App.open('profile')">
-        <div class="avi" style="background:${color}">${ini}</div>
-        <div class="u-name-status"><span class="u-name">${S.user.name}</span><span class="u-status" title="${status}">${status}</span></div>
+        <div class="avi" style="background:${color}">
+          ${aviUrl ? `<img src="${aviUrl}" alt="AV">` : ini}
+        </div>
+        <div class="u-name-status"><span class="u-name">${data.displayName || S.user.email.split('@')[0]}</span><span class="u-status" title="${status}">${status}</span></div>
         <button class="btn-so" onclick="event.stopPropagation();Auth.out()">Thoát</button>
       </div>`; 
     } else { 
+      // Không đăng nhập -> Mặc định mèo, nền sáng
+      applyBackgroundSettings('cat');
       a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Đăng nhập</button>`; 
     }
   }
 };
 
 // =====================================================
-// AUTH (Email/Pass + Cập nhật Ngày Sinh)
+// AUTH 
 // =====================================================
 const Auth = {
   render() {
@@ -434,8 +584,7 @@ const Auth = {
     <div class="mb">
       <div class="atabs"><button class="atab ${m==='signin'?'on':''}" onclick="Auth.setMode('signin')">Đăng nhập</button><button class="atab ${m==='register'?'on':''}" onclick="Auth.setMode('register')">Đăng ký</button></div>
       <div id="auth-err" class="err"></div>
-      ${m==='register'?`<div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="a-name" placeholder="Tên thật của bạn"></div>
-                        <div class="fg"><label class="fl">Ngày tháng năm sinh</label><input class="fi" id="a-dob" type="date"></div>`:''}
+      ${m==='register'?`<div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="a-name" placeholder="Tên thật của bạn"></div>`:''}
       <div class="fg"><label class="fl">Email</label><input class="fi" id="a-email" placeholder="you@email.com" type="email"></div>
       <div class="fg"><label class="fl">Mật khẩu</label><input class="fi" id="a-pass" placeholder="Tối thiểu 6 ký tự" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>
       <button class="btn-p" onclick="Auth.submit()">${m==='signin'?'Đăng nhập ngay →':'Tạo tài khoản →'}</button>
@@ -446,17 +595,24 @@ const Auth = {
     const err=s=>{const e=document.getElementById('auth-err');e.textContent=s;e.classList.add('on')};
     document.getElementById('auth-err').classList.remove('on');
     const email=document.getElementById('a-email').value, pass=document.getElementById('a-pass').value;
-    if(!email||!pass||pass.length<6){err('Vui lòng điền email và mật khẩu (>=6 ký tự).');return}
+    if(!email||!pass||pass.length<6){err('Vui lòng điền đủ email và mật khẩu (>=6 ký tự).');return}
     
     if(S.authMode==='register'){
-      const name=document.getElementById('a-name').value, dob=document.getElementById('a-dob').value;
-      if(!name.trim()||!dob){err('Vui lòng nhập đầy đủ tên và ngày sinh.');return}
+      const name=document.getElementById('a-name').value;
+      if(!name.trim()){err('Vui lòng nhập đầy đủ tên.');return}
       toast('Đang tạo tài khoản... ⏳');
       fbAuth.createUserWithEmailAndPassword(email, pass)
         .then(cred => {
           cred.user.updateProfile({ displayName: name.trim() });
-          fbDB.ref('data/users/'+cred.user.uid).set({ dob, joined: new Date().toISOString(), avatarColor: '#8B5CF6', status: 'Mới tham gia' });
-          App.closeAll(); toast('Tạo tài khoản thành công! 🎉');
+          // LƯU PROFILE CHO NGƯỜI MỚI VÀO DB
+          fbDB.ref('data/users/'+cred.user.uid).set({ 
+            displayName: name.trim(), 
+            joined: new Date().toISOString(), 
+            avatarColor: '#8B5CF6', 
+            status: 'Mới tham gia',
+            backgroundType: 'cat' // Mặc định là mèo
+          });
+          App.closeAll(); toast('Tạo tài khoản thành công! Hãy vào Profile đổi tên và ảnh nhé. 🎉');
         }).catch(error => err('Lỗi: ' + error.message));
     } else {
       toast('Đang đăng nhập... ⏳');
@@ -476,8 +632,11 @@ const Comments = {
     const sorted = Object.values(list).sort((a,b) => new Date(a.date) - new Date(b.date));
     return sorted.map(c => {
       const ini = getIni(c.author), color = c.authorColor || '#475569';
+      const avi = c.authorAvi;
       return `<div class="comment-item">
-        <div class="comment-avi" style="background:${color}">${ini}</div>
+        <div class="comment-avi" style="background:${color}">
+          ${avi ? `<img src="${avi}">` : ini}
+        </div>
         <div class="comment-right">
           <div class="comment-meta"><span style="font-weight:600;color:var(--txt)">${c.author}</span><span>${formatDate(c.date)}</span></div>
           <div class="comment-text">${c.text}</div>
@@ -495,7 +654,14 @@ const Comments = {
   post(category, itemId) {
     const input = document.getElementById(`cmt-input-${itemId}`);
     if (!input.value.trim()) return;
-    DB.push(`comments/${category}/${itemId}`, { text: input.value.trim(), author: S.user.name, authorColor: S.userFullData?.avatarColor || '#475569', date: new Date().toISOString() });
+    const comment = { 
+      text: input.value.trim(), 
+      author: S.userFullData?.displayName || S.user.email, 
+      authorColor: S.userFullData?.avatarColor || '#475569', 
+      authorAvi: S.userFullData?.avatarUrl || null,
+      date: new Date().toISOString() 
+    };
+    DB.push(`comments/${category}/${itemId}`, comment);
     input.value = ''; toast('Đã gửi bình luận! 💬');
   }
 };
@@ -506,27 +672,33 @@ const Comments = {
 const Stories = {
   render(){
     const el=document.getElementById('m-stories');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Chuyện trò</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Hủy':'+ Viết chuyện'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    el.innerHTML=`<div class="mh"><div class="mt">Buôn Chuyện</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Hủy':'+ Viết chuyện'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
     <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để chia sẻ câu chuyện</div>`:''}
     <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${this.listHTML()}</div></div>`;
   },
   pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ Chuyện mới</div>
   <div class="fg"><label class="fl">Tiêu đề</label><input class="fi" id="sf-t" placeholder="Tên câu chuyện..."></div>
-  <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Bắt đầu viết..."></textarea></div>
+  <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Bắt đầu viết ở đây..."></textarea></div>
   <button class="btn-p" onclick="Stories.post()">Đăng bài</button></div>`},
   listHTML(){
     if(!S.stories.length) return `<div class="empty-st"><p>Chưa có câu chuyện nào.</p></div>`;
     return S.stories.slice().reverse().slice(0, 20).map(s=>{
-      const author = s.author || 'Ẩn danh'; const canDel = !!S.user;
+      const author = s.author || 'Ẩn danh'; const canDel = S.user && s.uid === S.user.uid;
+      const avi = s.authorAvi;
       const cmtCount = (S.comments?.stories && S.comments.stories[s.id]) ? Object.keys(S.comments.stories[s.id]).length : 0;
       return`<div class="story-card" onclick="App.openOver('story', ${s.id})">
-        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
-          <div class="sc-title" style="font-weight:600;color:var(--p)">${s.title}</div>
-          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.2);border-radius:20px;color:#b91c1c;font-size:0.65rem;cursor:pointer;">Xóa</button>`:''}
+        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px; gap:10px">
+          <div style="display:flex; align-items:center; gap:10px">
+             <div class="comment-avi" style="background:${s.authorColor || '#ccc'}; width:32px; height:32px">
+              ${avi ? `<img src="${avi}">` : getIni(author)}
+            </div>
+            <div class="sc-title" style="font-weight:600;color:var(--p)">${s.title}</div>
+          </div>
+          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:3px 8px;background:transparent;border:1px solid rgba(239,68,68,0.2);border-radius:20px;color:#b91c1c;font-size:0.65rem;cursor:pointer; flex-shrink:0">Xóa</button>`:''}
         </div>
         <div class="sc-excerpt">${s.content}</div>
-        <div class="sc-meta" style="font-size:0.75rem;color:var(--tm);display:flex;justify-content:space-between;border-top:1px solid rgba(0,0,0,0.05);padding-top:10px">
-          <span>Tác giả: ${author} · ${s.date}</span><span>💬 ${cmtCount} bình luận</span>
+        <div class="sc-meta" style="font-size:0.75rem;color:var(--tm);display:flex;justify-content:space-between;padding-top:10px;margin-top:10px;border-top:1px solid var(--bdr)">
+          <span>Viết bởi ${author} · ${s.date}</span><span>💬 ${cmtCount} bình luận</span>
         </div>
       </div>`;
     }).join('')
@@ -534,10 +706,20 @@ const Stories = {
   togglePost(){S.postOpen=!S.postOpen;Stories.render()},
   post(){
     const t=(document.getElementById('sf-t')||{}).value||'', c=(document.getElementById('sf-c')||{}).value||'';
-    if(!t.trim()||!c.trim()){toast('Vui lòng điền đủ!');return}
+    if(!t.trim()||!c.trim()){toast('Vui lòng điền đủ tiêu đề và nội dung!');return}
+    const newStory = {
+      id:Date.now(),
+      uid: S.user.uid,
+      title:t.trim(),
+      content:c.trim(),
+      author: S.userFullData?.displayName || S.user.email,
+      authorColor: S.userFullData?.avatarColor || '#8B5CF6',
+      authorAvi: S.userFullData?.avatarUrl || null,
+      date:new Date().toISOString().split('T')[0]
+    };
     if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-    S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0]});
-    S.save('stories',S.stories); S.postOpen=false; Stories.render(); toast('Đã đăng! ✨')
+    S.stories.push(newStory);
+    S.save('stories',S.stories); S.postOpen=false; Stories.render(); toast('Đã đăng câu chuyện! ✨')
   },
   renderDetail(id){
     const s = S.stories.find(x=>x.id===id); if(!s) return;
@@ -551,22 +733,22 @@ const Stories = {
         </div>
       </div>`;
   },
-  delete(id) { if(confirm('Xóa câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); Stories.render(); } }
+  delete(id) { if(confirm('Xóa vĩnh viễn câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); App.render('stories'); } }
 };
 
 // =====================================================
-// GALLERY 
+// GALLERY
 // =====================================================
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm ảnh</div>`:''}
+  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để đăng khoảnh khắc</div>`:''}
   <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
-  ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="App.openOver('lbx',${p.id})"><div class="pc-ov" onclick="App.openOver('lbx',${p.id})"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s;opacity:.85" onmouseover="this.style.transform='scale(1.15)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><p>Chưa có ảnh.</p></div>`}</div>`;},
+  ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>`<div class="pc" onclick="App.openOver('lbx',${p.id})"><img src="${p.url}" loading="lazy"></div>`).join('')}</div>`:`<div class="empty-st"><p>Chưa có hình ảnh nào.</p></div>`}</div>`;},
   upload(){document.getElementById('gfup').click()},
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
-    if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
-    const cap=prompt('Chú thích ảnh:','')||'Một kỷ niệm'; toast('Đang tải ảnh lên... ⏳');
+    if(f.size>10*1024*1024){toast('Ảnh quá lớn! Tối đa 10MB ❌');e.target.value='';return}
+    const cap=prompt('Nhập chú thích ảnh (tùy chọn):','')||'Một khoảnh khắc'; toast('Đang tải ảnh lên... ⏳');
     const reader=new FileReader();
     reader.onload=ev=>{
       const base64=ev.target.result.split(',')[1]; const body=new URLSearchParams(); body.append('key',IMGBB_API_KEY); body.append('image',base64);
@@ -574,21 +756,30 @@ const Gallery = {
       .then(r=>r.json()).then(result=>{
         if(result.success){
           if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
-          S.photos.push({id:Date.now(),url:result.data.url,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});
+          S.photos.push({
+            id:Date.now(),
+            uid:S.user.uid,
+            url:result.data.url,
+            cap:cap.trim(),
+            by:S.userFullData?.displayName || S.user.email,
+            date:new Date().toISOString().split('T')[0]
+          });
           S.save('photos',S.photos);Gallery.render();toast('Đã thêm ảnh! 📸');
-        }else toast('Lỗi API ImgBB ❌');
-      }).catch(()=>toast('Lỗi mạng! ❌'));
+        }else toast('Lỗi tải ảnh lên ImgBB ❌');
+      }).catch(()=>toast('Lỗi kết nối mạng! ❌'));
     }; reader.readAsDataURL(f); e.target.value='';
   },
   renderLbx(id){
     const p = S.photos.find(x=>x.id===id); if(!p) return;
+    const canDel = S.user && (p.uid === S.user.uid);
     document.getElementById('m-lbx').innerHTML=`
       <div class="lbx-main">
         <img class="lbx-img" src="${p.url}">
-        <button class="lbx-x" onclick="App.back()" style="position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.9);color:#0f172a;border:1px solid rgba(0,0,0,0.1);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1)">✕</button>
+        <button class="lbx-x" onclick="App.back()" style="position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.9);color:#0f172a;border:1px solid var(--bdr);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1)">✕</button>
+        ${canDel?`<button class="lbx-del" onclick="Gallery.delete(${p.id})" style="position:absolute;top:20px;left:20px;background:rgba(255,255,255,0.9);border-radius:50%;width:30px;height:30px;border:none;color:#b91c1c;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1)">🗑️</button>`:''}
       </div>
       <div class="lbx-side">
-        <div style="margin-bottom:20px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
+        <div style="margin-bottom:20px; border-bottom: 1px solid var(--bdr); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
         <div class="comment-section" style="margin-top:0; border:none; flex:1; display:flex; flex-direction:column; overflow:hidden">
           <div class="comment-title">Bình luận</div>
           <div class="comment-list" id="photo-comments-${p.id}" style="flex:1; overflow-y:auto">${Comments.listHTML('photos', p.id)}</div>
@@ -596,17 +787,17 @@ const Gallery = {
         </div>
       </div>`;
   },
-  delete(id){ if(confirm('Xóa ảnh này?')){ S.photos=S.photos.filter(x=>x.id!==id); S.save('photos',S.photos); App.back(); Gallery.render(); toast('Đã xóa. 🗑️'); } }
+  delete(id){ if(confirm('Xóa vĩnh viễn ảnh này?')){ S.photos=S.photos.filter(x=>x.id!==id); S.save('photos',S.photos); App.back(); Gallery.render(); toast('Đã xóa ảnh. 🗑️'); } }
 };
 
 // =====================================================
-// POLLS (ĐÃ THÊM KHOẢNG CÁCH CHO % VÀ LƯỢNG VOTE)
+// POLLS
 // =====================================================
 const Polls = {
   render() {
     const el=document.getElementById('m-polls');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Bình chọn</div><div class="mha">${can?`<button class="btn-s" onclick="Polls.toggleCreate()">${S.pollCreateOpen?'✕ Hủy':'+ Tạo mới'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để tạo bình chọn</div>`:''}
+    el.innerHTML=`<div class="mh"><div class="mt">Vote</div><div class="mha">${can?`<button class="btn-s" onclick="Polls.toggleCreate()">${S.pollCreateOpen?'✕ Hủy':'+ Tạo mới'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để tham gia biểu quyết</div>`:''}
     <div id="poll-form-c">${S.pollCreateOpen&&can?Polls.formHTML():''}</div><div id="poll-list">${Polls.listHTML()}</div></div>`;
   },
   formHTML(){return`<div class="post-box"><div class="post-box-title">🗳️ Bình chọn mới</div>
@@ -618,12 +809,12 @@ const Polls = {
     <input class="fi" id="po-3" placeholder="Lựa chọn 4 (không bắt buộc)">
   </div><button class="btn-p" onclick="Polls.create()">Tạo bình chọn 🗳️</button></div>`},
   listHTML(){
-    if(!S.polls||!S.polls.length)return`<div class="empty-st"><p>Chưa có bình chọn nào.</p></div>`;
+    if(!S.polls||!S.polls.length)return`<div class="empty-st"><p>Chưa có cuộc bình chọn nào.</p></div>`;
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
-      const canDel=!!S.user;
-      return`<div style="background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow: 0 4px 15px rgba(0,0,0,0.02)">
+      const canDel=S.user && poll.uid === S.user.uid;
+      return`<div style="background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow: 0 4px 15px rgba(0,0,0,0.03)">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
           <div style="font-size:.73rem;color:var(--tm)">Tạo bởi ${poll.createdBy} <span style="margin:0 12px">·</span> ${total} phiếu</div></div>
@@ -631,9 +822,15 @@ const Polls = {
         </div>
         ${poll.options.filter(o=>o.text&&o.text.trim()).map((opt,i)=>{
           const votes=opt.voters?opt.voters.length:0; const pct=total>0?Math.round(votes/total*100):0; const isMe=myVote===i;
-          // Đã thêm khoảng cách 12px giữa % và lượng người vote
           return`<div class="poll-option ${isMe?'voted':''}" onclick="${S.user?`Polls.vote(${poll.id},${i})`:`App.open('auth')`}">
-            <div class="poll-bar" style="width:${pct}%"></div><div class="poll-row"><span style="font-size:.88rem;color:${isMe?'var(--p)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span><span style="font-size:.78rem;color:var(--tm);font-weight:600">${pct}% <span style="margin:0 12px">·</span> ${votes} phiếu</span></div>
+            <div class="poll-bar" style="width:${pct}%"></div>
+            <div class="poll-row" style="display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1">
+               <span style="font-size:.88rem;color:${isMe?'var(--p)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span>
+               <span style="font-size:.78rem;color:var(--tm);font-weight:600; display:flex; align-items:center; gap: 15px;">
+                  <span class="poll-percentage">${pct}%</span>
+                  <span>${votes} phiếu</span>
+               </span>
+            </div>
           </div>`;
         }).join('')}
       </div>`;
@@ -642,8 +839,8 @@ const Polls = {
   toggleCreate(){S.pollCreateOpen=!S.pollCreateOpen;Polls.render()},
   create(){
     const q=(document.getElementById('poll-q')||{}).value||'', opts=[0,1,2,3].map(i=>(document.getElementById('po-'+i)||{}).value||'').filter(t=>t.trim());
-    if(!q.trim()||opts.length<2){toast('Điền đủ câu hỏi và ít nhất 2 lựa chọn.');return}
-    const poll={id:Date.now(),question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:S.user.name};
+    if(!q.trim()||opts.length<2){toast('Vui lòng nhập câu hỏi và ít nhất 2 lựa chọn.');return}
+    const poll={id:Date.now(), uid: S.user.uid, question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:S.userFullData?.displayName || S.user.email};
     if(!S.polls)S.polls=[];S.polls.push(poll);S.save('polls',S.polls);S.pollCreateOpen=false;Polls.render();toast('Đã tạo bình chọn!');
   },
   vote(pollId,optIdx){
@@ -653,7 +850,7 @@ const Polls = {
     if(cur!==optIdx){if(!poll.options[optIdx].voters)poll.options[optIdx].voters=[];poll.options[optIdx].voters.push(S.user.name)}
     S.save('polls',S.polls);document.getElementById('poll-list').innerHTML=Polls.listHTML();
   },
-  delete(id){if(confirm('Xóa bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
+  delete(id){if(confirm('Xóa cuộc bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
 };
 
 // =====================================================
@@ -662,44 +859,46 @@ const Polls = {
 const Visions = {
   render(){
     const el=document.getElementById('m-visions');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Dự định</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Hủy':'+ Thêm'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm dự định</div>`:''}
+    el.innerHTML=`<div class="mh"><div class="mt">Visions</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Hủy':'+ Thêm kế hoạch'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm dự định tương lai</div>`:''}
     <div id="ap-cont">${S.addPlanOpen&&can?this.formHTML():''}</div><div class="ptl">${this.listHTML()}</div></div>`;
   },
   formHTML(){
     return`<div class="post-box" style="margin-bottom:24px"><div class="post-box-title">🌟 Kế hoạch mới</div>
-    <div class="fg"><label class="fl">Tên sự kiện</label><input class="fi" id="ap-t"></div>
-    <div class="fg"><label class="fl">Phân loại</label><div style="display:flex;gap:8px;flex-wrap:wrap">${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:20px;background:#FFF;color:var(--tm);cursor:pointer">${t.emoji} ${t.label}</button>`).join('')}</div></div>
+    <div class="fg"><label class="fl">Tên sự kiện</label><input class="fi" id="ap-t" placeholder="Ví dụ: Chuyến đi Đà Lạt"></div>
+    <div class="fg"><label class="fl">Phân loại</label><div style="display:flex;gap:8px;flex-wrap:wrap">${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid var(--bdr);border-radius:20px;background:var(--modal-bg);color:var(--tm);cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.8rem;transition:var(--tr)">${t.emoji} ${t.label}</button>`).join('')}</div></div>
     <div class="fg"><label class="fl">Ngày dự kiến</label><input class="fi" id="ap-d" type="date"></div>
-    <div class="fg"><label class="fl">Mô tả thêm</label><textarea class="fta" id="ap-c"></textarea></div>
+    <div class="fg"><label class="fl">Mô tả chi tiết</label><textarea class="fta" id="ap-c" placeholder="Bàn bạc gì thêm?"></textarea></div>
     <button class="btn-p" onclick="Visions.add()">Lưu dự định ✨</button></div>`;
   },
   selectType(type){
     S.planType=type;
     document.querySelectorAll('[data-vtype]').forEach(b=>{
       const isSel=b.dataset.vtype===type;
-      b.style.background=isSel?VIS_TYPES.find(x=>x.key===type).color:'#FFF';
-      b.style.borderColor=isSel?'var(--p)':'rgba(0,0,0,0.08)'; b.style.color=isSel?'var(--p)':'var(--tm)';
+      const typeData = VIS_TYPES.find(x=>x.key===b.dataset.vtype);
+      b.style.background=isSel?typeData.color:'var(--modal-bg)';
+      b.style.borderColor=isSel?'var(--p)': 'var(--bdr)'; b.style.color=isSel?'var(--p)':'var(--tm)';
+      if(isSel) b.style.boxShadow = '0 2px 8px rgba(124,58,237,0.1)'; else b.style.boxShadow = 'none';
     });
   },
   listHTML(){
     const sorted=[...S.plans].sort((a,b)=>a.date.localeCompare(b.date));
-    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.</p></div>`;
+    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.<br>Hãy thêm kế hoạch đầu tiên!</p></div>`;
     return sorted.map(p=>{
       const ti=VIS_TYPES.find(t=>t.key===(p.type||'other'))||VIS_TYPES[4];
-      const isPast=new Date(p.date)<new Date(); const canDel=!!S.user;
+      const isPast=new Date(p.date)<new Date(); const canDel=S.user && p.uid === S.user.uid;
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div><div class="pc2">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1">${p.title}</span></div>
-        <div class="p-date" style="color:var(--amber);font-weight:600;font-size:0.8rem">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:#b91c1c;font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1;color:var(--txt)">${p.title}</span></div>
+        <div class="p-date" style="color:var(--amber); font-weight:600; font-size:0.8rem">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.2);border-radius:20px;color:#b91c1c;font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
       </div></div>`;
     }).join('');
   },
   toggleAdd(){S.addPlanOpen=!S.addPlanOpen;Visions.render();if(S.addPlanOpen)setTimeout(()=>Visions.selectType('meetup'),10)},
   add(){
-    const t=document.getElementById('ap-t').value, d=document.getElementById('ap-d').value;
-    if(!t.trim()||!d){toast('Điền đủ tên sự kiện và ngày.');return}
-    S.plans.push({id:Date.now(),title:t.trim(),type:S.planType||'meetup',date:d,desc:document.getElementById('ap-c').value.trim(),addedBy:S.user.name});
+    const t=(document.getElementById('ap-t')||{}).value, d=(document.getElementById('ap-d')||{}).value;
+    if(!t.trim()||!d){toast('Vui lòng điền tên dự định và ngày!');return}
+    S.plans.push({id:Date.now(),uid:S.user.uid,title:t.trim(),type:S.planType||'meetup',date:d,desc:document.getElementById('ap-c').value.trim(),addedBy:S.userFullData?.displayName || S.user.email});
     S.save('plans',S.plans);S.addPlanOpen=false;Visions.render();toast('Đã lưu dự định! ✨');
   },
   delete(id){if(confirm('Xóa dự định này?')){S.plans=S.plans.filter(p=>p.id!==id);S.save('plans',S.plans);Visions.render();toast('Đã xóa.')}}
@@ -720,7 +919,7 @@ const Cal = {
       const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const myAv=S.user&&S.avail[S.user.name]&&S.avail[S.user.name][ds];
       let cls='cd'; if(ds<today)cls+=' past'; if(ds===today)cls+=' today'; if(myAv&&ds>=today)cls+=' my-av'; if(ds===S.selDay)cls+=' selected';
-      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${myAv&&ds>=today?`<div class="cdd" style="background:var(--amber)"></div>`:''}</div></div>`;
+      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${myAv&&ds>=today?`<div class="cdd" style="background:var(--p)"></div>`:''}</div></div>`;
     }
     grid+=`</div>`;
     const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date" style="color:var(--p)">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[S.user.name]&&S.avail[S.user.name][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
@@ -737,7 +936,7 @@ const Cal = {
 };
 
 // =====================================================
-// PROFILE, CUSTOMIZATION & SPIRITUAL
+// PROFILE
 // =====================================================
 const Profile = {
   colors: ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#71717A'],
@@ -745,50 +944,121 @@ const Profile = {
   render(){
     if(!S.user) return;
     const data = S.userFullData || {};
-    const dob = data.dob || '';
-    const spiri = this.calcSpiri(dob);
+    const aviUrl = data.avatarUrl;
+    const ini = getIni(data.displayName || S.user.email);
+    
+    if(!S.tempBgSet) {
+      S.tempBg = data.backgroundType || 'cat';
+      S.tempBgSet = true;
+    }
 
     const el=document.getElementById('m-profile');
-    el.innerHTML=`<div class="mh"><div class="mt">Cá nhân</div><div class="mha"><button class="btn-s" onclick="Profile.save()">Lưu thay đổi</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    el.innerHTML=`
+    <div class="mh"><div class="mt">Cá nhân</div><div class="mha"><button class="btn-s" onclick="Profile.save()">Lưu thay đổi</button><button class="mbtn-x" onclick="Profile.closeModal()">✕</button></div></div>
     <div class="mb">
-      <div class="fg"><label class="fl">Màu Avatar</label>
-        <div class="color-picker">${this.colors.map(c=>`<div class="color-dot ${data.avatarColor===c?'active':''}" style="background:${c}" onclick="Profile.setColor(this,'${c}')"></div>`).join('')}</div>
-      </div>
-      <div class="fg"><label class="fl">Trạng thái (Status)</label><input class="fi" id="p-status" value="${data.status||''}" placeholder="Hôm nay bạn thế nào?"></div>
       
-      <div class="fg"><label class="fl">Cập nhật Ngày sinh</label><input class="fi" id="p-dob" type="date" value="${dob}"></div>
-      
-      <div style="height:1px; background:rgba(0,0,0,0.05); margin:25px 0"></div>
-
-      <div class="spiri-section">
-        <div class="comment-title" style="text-align:center; color:var(--p); margin-bottom:15px">✨ Góc Tâm Linh</div>
-        ${dob ? `
-          <div class="spiri-grid">
-            <div class="spiri-item"><div class="spiri-val">${spiri.days}</div><div class="spiri-lbl">Ngày đến Sinh nhật</div></div>
-            <div class="spiri-item"><div class="spiri-val zodiac-emoji">${spiri.zodiac.emoji}</div><div class="spiri-lbl">Cung ${spiri.zodiac.name}</div></div>
+      <div class="post-box" style="margin-bottom: 30px;">
+        <div class="post-box-title">👤 Thông tin cơ bản</div>
+        
+        <div class="profile-avi-wrapper">
+          <div class="profile-avi" style="background:${data.avatarColor || '#8B5CF6'}" onclick="document.getElementById('avi-upload-input').click()">
+            ${aviUrl ? `<img src="${aviUrl}" id="profile-avi-img">` : `<span id="profile-avi-ini">${ini}</span>`}
+            <div class="avi-edit-overlay">Đổi ảnh</div>
           </div>
-        ` : `<div style="color:var(--td); text-align:center; font-size:0.85rem">Hãy nhập ngày sinh ở trên để tính Cung Hoàng Đạo nhé!</div>`}
+        </div>
+
+        <div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="p-name" value="${data.displayName||''}" placeholder="Tên của bạn"></div>
+        <div class="fg"><label class="fl">Email tài khoản</label><input class="fi" value="${S.user.email}" disabled></div>
+        <div class="fg"><label class="fl">Trạng thái tâm trạng</label><input class="fi" id="p-status" value="${data.status||''}" placeholder="Hôm nay bạn thế nào?"></div>
+        
+        <div class="fg"><label class="fl">Màu Avatar (Nếu chưa có ảnh)</label>
+          <div class="color-picker">${this.colors.map(c=>`<div class="color-dot ${data.avatarColor===c?'active':''}" style="background:${c}" onclick="Profile.setColor(this,'${c}')"></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <div class="post-box">
+        <div class="post-box-title">✨ Cài đặt giao diện & Nền</div>
+        <label class="fl">Chọn thú cưng làm nền</label>
+        <div class="background-picker">
+          <div class="bg-option ${S.tempBg === 'cat' ? 'active' : ''}" onclick="Profile.setTempBg(event, 'cat')">
+            <span class="bg-opt-icon">🐱</span>
+            Mèo Tuxedo
+            <div style="font-size:0.7rem; color:var(--tm); font-weight:400; margin-top:3px;">(Nền sáng)</div>
+          </div>
+          <div class="bg-option ${S.tempBg === 'dog' ? 'active' : ''}" onclick="Profile.setTempBg(event, 'dog')">
+            <span class="bg-opt-icon">🐶</span>
+            Chó Golden
+            <div style="font-size:0.7rem; color:var(--tm); font-weight:400; margin-top:3px;">(Nền tối)</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:30px; display:flex; gap:10px;">
+        <button class="btn-p" style="flex:1" onclick="Profile.save()">Lưu tất cả thay đổi ✨</button>
+        <button class="btn-s" onclick="Profile.closeModal()">Hủy</button>
       </div>
     </div>`;
   },
-  calcSpiri(dobStr) {
-    if(!dobStr) return { days: '?', zodiac: {name:'?', emoji:'❓'} };
-    const b = new Date(dobStr), now = new Date();
-    let nb = new Date(now.getFullYear(), b.getMonth(), b.getDate());
-    if (nb < now) nb.setFullYear(now.getFullYear() + 1);
-    const days = Math.ceil((nb - now) / 86400000);
-    const z=[{n:'Ma Kết',e:'♑',m:1,d:20},{n:'Bảo Bình',e:'♒',m:2,d:19},{n:'Song Ngư',e:'♓',m:3,d:20},{n:'Bạch Dương',e:'♈',m:4,d:20},{n:'Kim Ngưu',e:'♉',m:5,d:21},{n:'Song Tử',e:'♊',m:6,d:21},{n:'Cự Giải',e:'♋',m:7,d:23},{n:'Sư Tử',e:'♌',m:8,d:23},{n:'Xử Nữ',e:'♍',m:9,d:23},{n:'Thiên Bình',e:'♎',m:10,d:23},{n:'Bọ Cạp',e:'♏',m:11,d:22},{n:'Nhân Mã',e:'♐',m:12,d:22},{n:'Ma Kết',e:'♑',m:13,d:100}];
-    const zodiac = z.find(x => (b.getMonth()+1 < x.m) || (b.getMonth()+1 === x.m && b.getDate() <= x.d)) || z[0];
-    return { days: days===365?'Hôm nay!':days, zodiac:{name:zodiac.n, emoji:zodiac.e} };
+
+  closeModal() {
+    S.tempBgSet = false;
+    App.closeAll();
   },
-  setColor(el, c){ document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active')); el.classList.add('active'); S.selColor = c; },
+
+  setColor(el, c){ document.querySelectorAll('#m-profile .color-dot').forEach(d=>d.classList.remove('active')); el.classList.add('active'); S.selColor = c; },
+  
+  setTempBg(event, type) {
+    S.tempBg = type;
+    document.querySelectorAll('#m-profile .bg-option').forEach(opt => opt.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  },
+
+  handleAviUpload(e) {
+    const f=e.target.files[0]; if(!f) return;
+    if(f.size>5*1024*1024){toast('Ảnh quá lớn! Tối đa 5MB ❌');e.target.value='';return}
+    toast('Đang tải ảnh lên... ⏳');
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const base64=ev.target.result.split(',')[1]; const body=new URLSearchParams(); body.append('key',IMGBB_API_KEY); body.append('image',base64);
+      fetch('https://api.imgbb.com/1/upload',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+      .then(r=>r.json()).then(result=>{
+        if(result.success){
+          S.tempAviUrl = result.data.url; 
+          const aviPreview = document.querySelector('#m-profile .profile-avi');
+          aviPreview.innerHTML = `<img src="${S.tempAviUrl}" style="width:100%;height:100%;object-fit:cover;"> <div class="avi-edit-overlay">Đổi ảnh</div>`;
+          toast('Tải ảnh xong! Nhớ bấm Lưu thay đổi nhé. ✅');
+        }else toast('Lỗi ImgBB ❌');
+      }).catch(()=>toast('Lỗi mạng ❌'));
+    }; reader.readAsDataURL(f); e.target.value='';
+  },
+
   save(){
-    const st = document.getElementById('p-status').value;
-    const dob = document.getElementById('p-dob').value;
+    if(!S.user) return;
+    const name = document.getElementById('p-name').value.trim();
+    const st = document.getElementById('p-status').value.trim();
     const c = S.selColor || S.userFullData?.avatarColor || '#8B5CF6';
+    const avi = S.tempAviUrl || S.userFullData?.avatarUrl || null;
+    const bg = S.tempBg || S.userFullData?.backgroundType || 'cat';
+
+    if(!name) { toast('Vui lòng không để trống tên ❌'); return; }
+
+    toast('Đang lưu... ⏳');
     
-    fbDB.ref('data/users/'+S.user.uid).update({ status: st.trim() || 'Đang trực tuyến', avatarColor: c, dob: dob })
-      .then(()=>{ toast('Đã cập nhật Cá nhân! ✨'); App.updateAuth(); Profile.render(); });
+    fbAuth.currentUser.updateProfile({ displayName: name });
+
+    fbDB.ref('data/users/'+S.user.uid).update({ 
+      displayName: name,
+      status: st || 'Đang rảnh rỗi', 
+      avatarColor: c,
+      avatarUrl: avi,
+      backgroundType: bg
+    })
+    .then(()=>{ 
+      toast('Đã cập nhật hồ sơ và giao diện! ✨'); 
+      S.tempBgSet = false; 
+      S.tempAviUrl = null;
+      App.closeAll(); 
+    });
   }
 };
 
@@ -798,7 +1068,7 @@ const Profile = {
 function renderCurrentModal() {
   const cur=S.stack[S.stack.length-1];
   if(cur && document.getElementById('m-'+cur).classList.contains('on')){
-    if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+    if(document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) return;
     if(cur==='story' && S.stories.length) App.render(cur, S.stories.find(x=>document.getElementById('m-story').innerHTML.includes(x.title))?.id);
     else if(cur==='lbx' && S.photos.length) App.render(cur, S.photos.find(x=>document.getElementById('m-lbx').innerHTML.includes(x.url))?.id);
     else App.render(cur);
@@ -814,9 +1084,16 @@ DB.subscribe('comments', val => { S.comments = val; renderCurrentModal(); });
 
 fbAuth.onAuthStateChanged(user => {
   if (user) {
-    S.user = { uid: user.uid, name: user.displayName, email: user.email };
-    fbDB.ref('data/users/'+user.uid).on('value', snap => { S.userFullData = snap.val(); App.updateAuth(); });
-  } else { S.user = null; S.userFullData = null; App.updateAuth(); }
+    S.user = { uid: user.uid, email: user.email };
+    fbDB.ref('data/users/'+user.uid).on('value', snap => { 
+      S.userFullData = snap.val(); 
+      App.updateAuth(); 
+    });
+  } else { 
+    S.user = null; S.userFullData = null; 
+    applyBackgroundSettings('cat'); 
+    App.updateAuth(); 
+  }
 });
 </script>
 </body>
