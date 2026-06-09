@@ -248,16 +248,15 @@ const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAl6bD_3genvVbmCPimE9bZgHlEMDyZOJE",
   authDomain: "duachungminh.firebaseapp.com",
   databaseURL: "https://duachungminh-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "duachungminh",
-  storageBucket: "duachungminh.firebasestorage.app",
-  messagingSenderId: "507340146864",
-  appId: "1:507340146864:web:d9198c2c7eeaa48231d375",
-  measurementId: "G-NS3QJQQ63R"
+  projectId: "duachungminh"
 };
 
 let fbDB = null;
 if (FIREBASE_ENABLED) {
-  try { firebase.initializeApp(FIREBASE_CONFIG); fbDB = firebase.database(); }
+  try { 
+    firebase.initializeApp(FIREBASE_CONFIG); 
+    fbDB = firebase.database(); 
+  }
   catch(e) { console.warn('Firebase error:', e); }
 }
 
@@ -469,7 +468,7 @@ const Polls = {
 };
 
 // =====================================================
-// STORIES (BẢN VÁ LỖI TÍCH HỢP DELETE)
+// STORIES 
 // =====================================================
 const Stories = {
   render(){
@@ -484,7 +483,6 @@ const Stories = {
   <div class="fg"><label class="fl">Tags</label><input class="fi" id="sf-g" placeholder="music, nights, memories..."></div>
   <button class="btn-p" onclick="Stories.post()">Publish Story</button></div>`},
   listHTML(){
-    // Ép kiểu mảng để chống lỗi
     let arr = [];
     if (Array.isArray(S.stories)) { arr = S.stories; }
     else if (typeof S.stories === 'object' && S.stories !== null) { arr = Object.values(S.stories); }
@@ -499,8 +497,6 @@ const Stories = {
       const liked = S.user && likedBy.includes(S.user.name);
       const tags = s.tags || [];
       const content = s.content || '';
-      
-      // Kiểm tra xem user hiện tại có phải là người đăng bài không
       const canDel = S.user && author === S.user.name;
 
       return`<div class="story-card" onclick="Stories.detail(${s.id})">
@@ -559,8 +555,12 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY
+// GALLERY (CẬP NHẬT TÍCH HỢP IMGBB API - DUNG LƯỢNG KHÔNG GIỚI HẠN)
 // =====================================================
+
+// BẠN HÃY DÁN API KEY CỦA IMGBB VÀO GIỮA 2 DẤU NGOẶC KÉP Ở DÒNG DƯỚI ĐÂY NHÉ:
+const IMGBB_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
+
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Gallery</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Add Photo</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
   <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to add photos</div>`:''}
@@ -568,7 +568,56 @@ const Gallery = {
   ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc" onclick="Gallery.lbx(${p.id})"><img src="${p.url}" loading="lazy"><div class="pc-ov"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div></div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
   </div>`;},
   upload(){document.getElementById('gfup').click()},
-  handleUpload(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const cap=prompt('Caption:','')||'A new memory';S.photos.push({id:Date.now(),url:ev.target.result,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});try{S.save('photos',S.photos)}catch(_){S.photos=S.photos.slice(-6);S.save('photos',S.photos)}Gallery.render();toast('Photo added! 📸')};r.readAsDataURL(f);e.target.value=''},
+  
+  handleUpload(e){
+    const f=e.target.files[0];if(!f)return;
+    
+    if(IMGBB_API_KEY === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
+      alert("Hãy dán API Key của ImgBB vào code trước nhé!");
+      return;
+    }
+
+    const cap=prompt('Caption:','')||'A new memory';
+    toast('Đang tải ảnh lên ImgBB... ⏳');
+    
+    const formData = new FormData();
+    formData.append('image', f);
+
+    // Gửi ảnh sang server của ImgBB
+    fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+      if(result.success) {
+        const url = result.data.url; // Lấy link ảnh trực tiếp từ ImgBB
+        
+        if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
+        
+        // Lưu URL rút gọn vào Firebase Database của bạn
+        S.photos.push({
+          id: Date.now(),
+          url: url,
+          cap: cap.trim(),
+          by: S.user.name,
+          date: new Date().toISOString().split('T')[0]
+        });
+        
+        S.save('photos', S.photos);
+        Gallery.render();
+        toast('Photo added! 📸');
+      } else {
+        toast('Lỗi khi tải ảnh lên ImgBB! ❌');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      toast('Lỗi kết nối mạng! ❌');
+    });
+
+    e.target.value='';
+  },
   lbx(id){App.openOver('lbx',S.photos.find(x=>x.id===id))},
   renderLbx(p){document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner"><button class="lbx-x" onclick="App.back()">✕</button><img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div></div>`}
 };
@@ -792,7 +841,6 @@ function initFirebaseSync(){
       if(val===null)return;
       const cur=S.stack[S.stack.length-1];
       S[key]=val;
-      // Re-render active modal if user not currently typing
       if(cur&&document.activeElement&&!document.activeElement.classList.contains('fi')&&!document.activeElement.classList.contains('fta')){
         const el=document.getElementById('m-'+cur);
         if(el&&el.classList.contains('on'))App.render(cur);
