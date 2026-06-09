@@ -84,15 +84,12 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 .cat .whisker-r::before { top: -15px; transform: rotate(-10deg); }
 .cat .whisker-r::after { top: 15px; transform: rotate(10deg); }
 
-/* Mõm mèo bọc lại để lưỡi thò ra từ trong khe mồm */
 .cat .nose-mouth { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; }
 .cat .nose { width: 22px; height: 14px; background: #f472b6; border-radius: 50% 50% 45% 45%; margin-bottom: -2px; z-index: 4; position: relative; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
 .cat .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3;}
-/* Thêm background trắng cho mép để che gốc lưỡi */
 .cat .mouth-l, .cat .mouth-r { width: 22px; height: 12px; border-bottom: 3px solid #050505; border-radius: 0 0 15px 15px; transition: var(--tr); background: #FFFFFF; }
 .cat .mouth-l { border-right: 3px solid #050505; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; transform: rotate(15deg); margin-right:-2px; }
 .cat .mouth-r { border-left: 3px solid #050505; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; transform: rotate(-15deg); margin-left:-2px;}
-/* Lưỡi được giấu bằng z-index -1, nằm dưới mép */
 .cat .tongue { position: absolute; top: 6px; width: 20px; height: 0; background: #fb7185; border-radius: 0 0 10px 10px; left: 50%; transform: translateX(-50%); transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
 .cat.teasing .tongue { height: 28px; }
 
@@ -102,34 +99,28 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 .dog-face { position: absolute; inset: 0; background: #EAB308; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.3); }
 .dog-snout { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 150px; height: 95px; background: #FDE047; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; box-shadow: 0 -3px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; padding-top: 10px;}
 
-/* Dog Ears (Tai cụp Golden) */
 .dog .ear { position: absolute; top: 10px; width: 85px; height: 150px; background: #CA8A04; border-radius: 40% 40% 50% 50% / 30% 30% 70% 70%; z-index: -1; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .dog .ear.left { left: -10px; transform: rotate(15deg); transform-origin: top right; }
 .dog .ear.right { right: -10px; transform: rotate(-15deg); transform-origin: top left; }
 .dog.happy .ear.left { transform: rotate(35deg) translateY(-5px); }
 .dog.happy .ear.right { transform: rotate(-35deg) translateY(-5px); }
 
-/* Mõm, mũi, miệng Chó */
 .dog-nose { width: 40px; height: 25px; background: #1C1917; border-radius: 40% 40% 60% 60%; box-shadow: inset 0 -3px 5px rgba(255,255,255,0.15); z-index: 4; position: relative;}
 .dog .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3; margin-top: -2px;}
-/* Thêm nền vàng nhạt cho mép chó để che gốc lưỡi */
 .dog .mouth-l, .dog .mouth-r { width: 35px; height: 18px; border-bottom: 4px solid #1C1917; border-radius: 0 0 20px 20px; transition: var(--tr); background: #FDE047;}
 .dog .mouth-l { border-right: 4px solid #1C1917; transform: rotate(15deg); border-bottom-right-radius: 25px; margin-right: -2px;}
 .dog .mouth-r { border-left: 4px solid #1C1917; transform: rotate(-15deg); border-bottom-left-radius: 25px; margin-left: -2px;}
 
-/* Lưỡi chó nằm chìm bên dưới khe mồm (z-index: -1) */
-.dog-tongue { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 34px; height: 0; background: #F43F5E; border-radius: 0 0 17px 17px; transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1;}
+.dog-tongue { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 34px; height: 0; background: #F43F5E; border-radius: 0 0 17px 17px; transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1;}
 .dog-tongue::after { content:''; position: absolute; top: 0; left: 16px; bottom: 5px; width: 2px; background: rgba(0,0,0,0.1); }
-.dog.happy .dog-tongue { height: 45px;}
+.dog.happy .dog-tongue { height: 45px; top: 14px;}
 
 /* =========================================
-   === SHARED EYES CSS (MẮT TRÒN ĐẢO THEO CHUỘT) === 
+   === SHARED EYES CSS === 
    ========================================= */
 .eye-wrap { position: absolute; top: 80px; display: flex; gap: 45px; left: 50%; transform: translateX(-50%); }
 .eye { position: relative; width: 55px; height: 55px; border-radius: 50%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(0,0,0,0.2); }
-/* Mắt mèo */
 .cat .eye { background: #fde047; } 
-/* Mắt chó (To hơn chút, màu trắng viền nâu) */
 .dog .eye-wrap { top: 75px; gap: 50px; }
 .dog .eye { width: 45px; height: 45px; background: #ffffff; border-color: #CA8A04; border-width: 4px;}
 
@@ -138,7 +129,6 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 .dog .pupil { width: 22px; height: 22px; background: #1C1917; }
 .pupil::after { content:''; position: absolute; top: 5px; left: 5px; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
 
-/* Híp mắt sung sướng */
 .animal-container.teasing .eye, .animal-container.happy .eye { transform: scaleY(0.1) translateY(40px); }
 .dog.happy .eye { background: #1C1917; border-color: transparent; }
 
@@ -158,7 +148,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .btn-so{padding:5px 12px;background:var(--rd);border:1px solid rgba(219,39,119,0.2);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
 .btn-so:hover{background:rgba(219,39,119,0.15);transform:scale(1.05)}
 
-/* === ORBIT CARDS (GIỮ NGUYÊN TIÊU ĐỀ MENU GỐC) === */
+/* === ORBIT CARDS === */
 #orbit-container{position:fixed;inset:0;z-index:20;pointer-events:none;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,600px) minmax(200px,1fr);grid-template-rows:1fr;padding:100px 40px 60px}
 .sidebar{display:flex;flex-direction:column;justify-content:space-around;gap:20px;pointer-events:none}
 .left-sidebar{grid-column:1;align-items:start}
@@ -207,7 +197,6 @@ body.dark-mode .mb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1);
 .fi,.fta{width:100%;padding:11px 15px;background:var(--bg);border:1px solid var(--bdr);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
 body.dark-mode .fi, body.dark-mode .fta { background: #111827; }
 .fi:focus,.fta:focus{border-color:var(--p);background:var(--modal-bg);box-shadow:0 0 0 3px var(--pd)}
-.fi:disabled{opacity: 0.6; cursor: not-allowed;}
 .fta{min-height:90px}
 .btn-p{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),#6d28d9);border:none;border-radius:13px;color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--tr);margin-top:4px}
 .btn-p:hover{box-shadow:0 6px 20px rgba(124,58,237,0.3);transform:translateY(-2px);filter:brightness(1.05)}
@@ -222,7 +211,7 @@ body.dark-mode .atab.on { background: #1F2937; color: var(--p); border-color: rg
 .err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#b91c1c;padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;display:none}
 .err.on{display:block}
 .info-banner{background:var(--pd);border:1px solid rgba(124,58,237,0.2);border-radius:12px;color:var(--p);padding:14px 18px;font-size:.85rem;margin-bottom:20px;text-align:center}
-.post-box{background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.1);border-radius:14px;padding:20px;margin-bottom:24px}
+.post-box{background:rgba(0,0,0,0.02);border:1px dashed var(--bdr);border-radius:14px;padding:20px;margin-bottom:24px}
 body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.1); }
 .post-box-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
@@ -242,11 +231,12 @@ body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(
 .btn-comment { padding: 9px 16px; background: var(--p); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--tr); box-shadow:0 2px 6px rgba(139,92,246,0.3)}
 .btn-comment:hover { opacity: 0.9; transform: translateY(-1px); }
 
-/* === TALES & GALLERY === */
+/* === STORIES === */
 .story-card{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer;box-shadow: 0 2px 8px rgba(0,0,0,0.04);}
 .story-card:hover{border-color:var(--p);background:var(--pd);transform:translateX(4px);box-shadow: 0 5px 15px rgba(124,58,237,0.08)}
 .sc-excerpt{font-size:.85rem;color:var(--tm);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
+/* === GALLERY === */
 .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--bg);border:1px solid var(--bdr);cursor:pointer}
 .pc img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
@@ -260,7 +250,7 @@ body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(
 .ptl{position:relative;padding-left:44px}
 .ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:var(--bdr)}
 .pi{position:relative;margin-bottom:24px}
-.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid var(--modal-bg);box-shadow:0 0 10px rgba(217,119,6,0.3)}
+.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid var(--modal-bg);box-shadow:0 0 10px rgba(217,119,6,.4)}
 .pc2{background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:20px;transition:var(--tr);box-shadow: 0 2px 8px rgba(0,0,0,0.04)}
 .pc2:hover{border-color:var(--al);background:rgba(217,119,6,0.04);transform:translateX(4px)}
 
@@ -298,16 +288,15 @@ body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(
 .color-picker { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--tr); box-shadow:0 2px 5px rgba(0,0,0,0.2)}
 .color-dot.active { border-color: var(--txt); transform: scale(1.15); }
-
 .background-picker { display: flex; gap: 10px; margin-bottom: 20px;}
 .bg-option { flex: 1; padding: 15px; border: 2px solid var(--bdr); border-radius: 12px; cursor: pointer; text-align: center; transition: var(--tr); background: var(--bg);}
 body.dark-mode .bg-option { background: #374151;}
-.bg-option:hover { border-color: rgba(124,58,237,0.3); background: var(--pd);}
+.bg-option:hover { border-color: rgba(139,92,246,0.3); background: var(--pd);}
 .bg-option.active { border-color: var(--p); background: var(--pd); color: var(--p); font-weight: 600;}
 .bg-opt-icon { font-size: 1.5rem; margin-bottom: 5px; display: block;}
 
 /* === TOAST === */
-#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(124,58,237,0.3);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,0.3);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 #toast.on{transform:translateY(0);opacity:1}
 
 @media(max-width:1024px){
@@ -318,7 +307,7 @@ body.dark-mode .bg-option { background: #374151;}
 }
 
 @media(max-width:640px){
-  .animal-container{transform: scale(1.0);} 
+  .animal-container{transform: scale(0.9);} 
   #orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}
   .sidebar{flex-direction:column;width:100%;padding:0}
   .cw { max-width: 100%; }
@@ -466,11 +455,11 @@ const S = {
 };
 
 const VIS_TYPES = [
-  {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(139,92,246,.15)'},
-  {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(5,150,105,.15)'},
-  {key:'event', emoji:'🎉',label:'Event', color:'rgba(217,119,6,.15)'},
-  {key:'activity',emoji:'🎯',label:'Activity',color:'rgba(225,29,72,.15)'},
-  {key:'other', emoji:'💡',label:'Other', color:'rgba(0,0,0,.06)'}
+  {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(124,58,237,0.1)'},
+  {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(5,150,105,0.1)'},
+  {key:'event', emoji:'🎉',label:'Event', color:'rgba(217,119,6,0.1)'},
+  {key:'activity',emoji:'🎯',label:'Activity',color:'rgba(219,39,119,0.1)'},
+  {key:'other', emoji:'💡',label:'Other', color:'rgba(71,85,105,0.06)'}
 ];
 
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2800)}
@@ -482,7 +471,6 @@ function formatDate(iso){if(!iso)return''; const d=new Date(iso); return `${Stri
 // =====================================================
 const pupils = document.querySelectorAll('.pupil');
 
-// 1. Đảo mắt theo chuột
 document.addEventListener('mousemove', (e) => {
   if (S.stack.length > 0) return; 
   const { clientX: mouseX, clientY: mouseY } = e;
@@ -492,13 +480,12 @@ document.addEventListener('mousemove', (e) => {
     const eyeCenterY = rect.top + rect.height / 2;
     const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
     
-    // Giới hạn để con ngươi hình tròn không lẹm ra ngoài mắt
-    const distance = Math.min(10, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
+    // Giới hạn bán kính di chuyển con ngươi
+    const distance = Math.min(15, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
     pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle)*distance}px), calc(-50% + ${Math.sin(angle)*distance}px))`;
   });
 });
 
-// 2. Click menu -> Nũng nịu và Mở hộp thoại
 function teaseAndOpen(modalName) {
   const activeAnimal = document.querySelector('.animal-container.active');
   if(activeAnimal) {
@@ -509,20 +496,18 @@ function teaseAndOpen(modalName) {
   setTimeout(() => App.open(modalName), 300); 
 }
 
-// 3. Cập nhật Background dựa trên dữ liệu User
 function applyBackgroundSettings(bgType) {
   const body = document.body;
   const catContainer = document.getElementById('animal-cat');
   const dogContainer = document.getElementById('animal-dog');
 
-  // Ẩn tất cả
   document.querySelectorAll('.animal-container').forEach(el => el.classList.remove('active'));
 
   if (bgType === 'dog') {
-    body.classList.add('dark-mode'); // Chọn Chó -> Nền tối
+    body.classList.add('dark-mode'); 
     dogContainer.classList.add('active');
   } else {
-    body.classList.remove('dark-mode'); // Chọn Mèo -> Nền sáng (mặc định)
+    body.classList.remove('dark-mode'); 
     catContainer.classList.add('active');
   }
 }
@@ -556,7 +541,6 @@ const App = {
       const status = data.status || 'Đang trực tuyến';
       const aviUrl = data.avatarUrl;
 
-      // Cập nhật giao diện nền ngay lập tức
       applyBackgroundSettings(data.backgroundType || 'cat');
 
       a.innerHTML=`<div class="user-pill" onclick="App.open('profile')">
@@ -567,7 +551,6 @@ const App = {
         <button class="btn-so" onclick="event.stopPropagation();Auth.out()">Thoát</button>
       </div>`; 
     } else { 
-      // Không đăng nhập -> Mặc định mèo, nền sáng
       applyBackgroundSettings('cat');
       a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Đăng nhập</button>`; 
     }
@@ -609,7 +592,7 @@ const Auth = {
             displayName: name.trim(), 
             joined: new Date().toISOString(), 
             avatarColor: '#8B5CF6', 
-            status: 'Mới tham gia',
+            status: 'Thành viên mới',
             backgroundType: 'cat' // Mặc định là mèo
           });
           App.closeAll(); toast('Tạo tài khoản thành công! Hãy vào Profile đổi tên và ảnh nhé. 🎉');
@@ -654,9 +637,11 @@ const Comments = {
   post(category, itemId) {
     const input = document.getElementById(`cmt-input-${itemId}`);
     if (!input.value.trim()) return;
+    
+    const myName = S.userFullData?.displayName || S.user.email;
     const comment = { 
       text: input.value.trim(), 
-      author: S.userFullData?.displayName || S.user.email, 
+      author: myName, 
       authorColor: S.userFullData?.avatarColor || '#475569', 
       authorAvi: S.userFullData?.avatarUrl || null,
       date: new Date().toISOString() 
@@ -677,13 +662,16 @@ const Stories = {
     <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${this.listHTML()}</div></div>`;
   },
   pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ Chuyện mới</div>
-  <div class="fg"><label class="fl">Tiêu đề</label><input class="fi" id="sf-t" placeholder="Tên câu chuyện..."></div>
+  <div class="fg"><label class="fl">Tiêu đề</label><input class="fi" id="sf-t" placeholder="Cho câu chuyện một cái tên..."></div>
   <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Bắt đầu viết ở đây..."></textarea></div>
-  <button class="btn-p" onclick="Stories.post()">Đăng bài</button></div>`},
+  <button class="btn-p" onclick="Stories.post()">Đăng câu chuyện ✨</button></div>`},
   listHTML(){
-    if(!S.stories.length) return `<div class="empty-st"><p>Chưa có câu chuyện nào.</p></div>`;
+    if(!S.stories.length) return `<div class="empty-st"><p>Góc này còn trống.</p></div>`;
+    const myName = S.userFullData?.displayName || S.user?.email;
+    
     return S.stories.slice().reverse().slice(0, 20).map(s=>{
-      const author = s.author || 'Ẩn danh'; const canDel = S.user && s.uid === S.user.uid;
+      const author = s.author || 'Ẩn danh'; 
+      const canDel = S.user && (s.uid === S.user.uid || s.author === myName);
       const avi = s.authorAvi;
       const cmtCount = (S.comments?.stories && S.comments.stories[s.id]) ? Object.keys(S.comments.stories[s.id]).length : 0;
       return`<div class="story-card" onclick="App.openOver('story', ${s.id})">
@@ -707,12 +695,14 @@ const Stories = {
   post(){
     const t=(document.getElementById('sf-t')||{}).value||'', c=(document.getElementById('sf-c')||{}).value||'';
     if(!t.trim()||!c.trim()){toast('Vui lòng điền đủ tiêu đề và nội dung!');return}
+    
+    const myName = S.userFullData?.displayName || S.user.email;
     const newStory = {
       id:Date.now(),
       uid: S.user.uid,
       title:t.trim(),
       content:c.trim(),
-      author: S.userFullData?.displayName || S.user.email,
+      author: myName,
       authorColor: S.userFullData?.avatarColor || '#8B5CF6',
       authorAvi: S.userFullData?.avatarUrl || null,
       date:new Date().toISOString().split('T')[0]
@@ -726,24 +716,24 @@ const Stories = {
     document.getElementById('m-story').innerHTML=`
       <div class="mh"><div class="mt" style="font-size:1.2rem;flex:1;color:var(--p)">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
       <div class="mb"><div class="sfull" style="white-space:pre-wrap;line-height:1.8;color:var(--txt);font-size:0.95rem;margin-bottom:20px">${s.content}</div>
-        <div style="font-size:0.8rem;color:var(--tm);text-align:right">Viết bởi ${s.author} ngày ${s.date}</div>
+        <div style="font-size:0.8rem;color:var(--tm);text-align:right">Đăng bởi ${s.author} ngày ${s.date}</div>
         <div class="comment-section"><div class="comment-title">Bình luận</div>
           <div class="comment-list" id="story-comments-${s.id}">${Comments.listHTML('stories', s.id)}</div>
           ${Comments.formHTML('stories', s.id)}
         </div>
       </div>`;
   },
-  delete(id) { if(confirm('Xóa vĩnh viễn câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); App.render('stories'); } }
+  delete(id) { if(confirm('Xóa vĩnh viễn câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); Stories.render(); } }
 };
 
 // =====================================================
-// GALLERY
+// GALLERY 
 // =====================================================
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
   <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để đăng khoảnh khắc</div>`:''}
   <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
-  ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>`<div class="pc" onclick="App.openOver('lbx',${p.id})"><img src="${p.url}" loading="lazy"></div>`).join('')}</div>`:`<div class="empty-st"><p>Chưa có hình ảnh nào.</p></div>`}</div>`;},
+  ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="App.openOver('lbx',${p.id})"><div class="pc-ov" onclick="App.openOver('lbx',${p.id})"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user&&((p.uid===S.user.uid)||(p.by===(S.userFullData?.displayName||S.user.email)))?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s;opacity:.85" onmouseover="this.style.transform='scale(1.15)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><p>Chưa có hình ảnh nào.</p></div>`}</div>`;},
   upload(){document.getElementById('gfup').click()},
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
@@ -756,12 +746,13 @@ const Gallery = {
       .then(r=>r.json()).then(result=>{
         if(result.success){
           if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
+          const myName = S.userFullData?.displayName || S.user.email;
           S.photos.push({
             id:Date.now(),
             uid:S.user.uid,
             url:result.data.url,
             cap:cap.trim(),
-            by:S.userFullData?.displayName || S.user.email,
+            by:myName,
             date:new Date().toISOString().split('T')[0]
           });
           S.save('photos',S.photos);Gallery.render();toast('Đã thêm ảnh! 📸');
@@ -771,7 +762,9 @@ const Gallery = {
   },
   renderLbx(id){
     const p = S.photos.find(x=>x.id===id); if(!p) return;
-    const canDel = S.user && (p.uid === S.user.uid);
+    const myName = S.userFullData?.displayName || S.user?.email;
+    const canDel = S.user && (p.uid === S.user.uid || p.by === myName);
+    
     document.getElementById('m-lbx').innerHTML=`
       <div class="lbx-main">
         <img class="lbx-img" src="${p.url}">
@@ -779,7 +772,7 @@ const Gallery = {
         ${canDel?`<button class="lbx-del" onclick="Gallery.delete(${p.id})" style="position:absolute;top:20px;left:20px;background:rgba(255,255,255,0.9);border-radius:50%;width:30px;height:30px;border:none;color:#b91c1c;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1)">🗑️</button>`:''}
       </div>
       <div class="lbx-side">
-        <div style="margin-bottom:20px; border-bottom: 1px solid var(--bdr); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
+        <div style="margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid var(--bdr)"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
         <div class="comment-section" style="margin-top:0; border:none; flex:1; display:flex; flex-direction:column; overflow:hidden">
           <div class="comment-title">Bình luận</div>
           <div class="comment-list" id="photo-comments-${p.id}" style="flex:1; overflow-y:auto">${Comments.listHTML('photos', p.id)}</div>
@@ -802,18 +795,20 @@ const Polls = {
   },
   formHTML(){return`<div class="post-box"><div class="post-box-title">🗳️ Bình chọn mới</div>
   <div class="fg"><label class="fl">Câu hỏi</label><input class="fi" id="poll-q" placeholder="Ví dụ: Tối nay đi đâu?"></div>
-  <div class="fg"><label class="fl">Tùy chọn (từ 2 đến 4)</label>
+  <div class="fg"><label class="fl">Các lựa chọn (từ 2 đến 4)</label>
     <input class="fi" id="po-0" placeholder="Lựa chọn 1" style="margin-bottom:8px">
     <input class="fi" id="po-1" placeholder="Lựa chọn 2" style="margin-bottom:8px">
-    <input class="fi" id="po-2" placeholder="Lựa chọn 3 (không bắt buộc)" style="margin-bottom:8px">
-    <input class="fi" id="po-3" placeholder="Lựa chọn 4 (không bắt buộc)">
+    <input class="fi" id="po-2" placeholder="Lựa chọn 3 (tùy chọn)" style="margin-bottom:8px">
+    <input class="fi" id="po-3" placeholder="Lựa chọn 4 (tùy chọn)">
   </div><button class="btn-p" onclick="Polls.create()">Tạo bình chọn 🗳️</button></div>`},
   listHTML(){
     if(!S.polls||!S.polls.length)return`<div class="empty-st"><p>Chưa có cuộc bình chọn nào.</p></div>`;
+    const myName = S.userFullData?.displayName || S.user?.email;
+    
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
-      const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
-      const canDel=S.user && poll.uid === S.user.uid;
+      const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(myName)):-1;
+      const canDel=S.user && (poll.uid === S.user.uid || poll.createdBy === myName);
       return`<div style="background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow: 0 4px 15px rgba(0,0,0,0.03)">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
@@ -840,17 +835,27 @@ const Polls = {
   create(){
     const q=(document.getElementById('poll-q')||{}).value||'', opts=[0,1,2,3].map(i=>(document.getElementById('po-'+i)||{}).value||'').filter(t=>t.trim());
     if(!q.trim()||opts.length<2){toast('Vui lòng nhập câu hỏi và ít nhất 2 lựa chọn.');return}
-    const poll={id:Date.now(), uid: S.user.uid, question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:S.userFullData?.displayName || S.user.email};
+    
+    const myName = S.userFullData?.displayName || S.user.email;
+    const poll={id:Date.now(), uid: S.user.uid, question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:myName};
     if(!S.polls)S.polls=[];S.polls.push(poll);S.save('polls',S.polls);S.pollCreateOpen=false;Polls.render();toast('Đã tạo bình chọn!');
   },
   vote(pollId,optIdx){
-    if(!S.user)return; const poll=S.polls.find(p=>p.id===pollId);if(!poll)return;
-    const cur=poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name));
-    if(cur!==-1)poll.options[cur].voters=poll.options[cur].voters.filter(v=>v!==S.user.name);
-    if(cur!==optIdx){if(!poll.options[optIdx].voters)poll.options[optIdx].voters=[];poll.options[optIdx].voters.push(S.user.name)}
-    S.save('polls',S.polls);document.getElementById('poll-list').innerHTML=Polls.listHTML();
+    if(!S.user)return; 
+    const myName = S.userFullData?.displayName || S.user.email;
+    const poll=S.polls.find(p=>p.id===pollId);if(!poll)return;
+    const cur=poll.options.findIndex(o=>o.voters&&o.voters.includes(myName));
+    
+    if(cur!==-1)poll.options[cur].voters=poll.options[cur].voters.filter(v=>v!==myName);
+    if(cur!==optIdx){
+      if(!poll.options[optIdx].voters)poll.options[optIdx].voters=[];
+      poll.options[optIdx].voters.push(myName);
+    }
+    S.save('polls',S.polls);
+    // Instant re-render
+    document.getElementById('poll-list').innerHTML=Polls.listHTML();
   },
-  delete(id){if(confirm('Xóa cuộc bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
+  delete(id){if(confirm('Xóa bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
 };
 
 // =====================================================
@@ -884,9 +889,13 @@ const Visions = {
   listHTML(){
     const sorted=[...S.plans].sort((a,b)=>a.date.localeCompare(b.date));
     if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.<br>Hãy thêm kế hoạch đầu tiên!</p></div>`;
+    
+    const myName = S.userFullData?.displayName || S.user?.email;
     return sorted.map(p=>{
       const ti=VIS_TYPES.find(t=>t.key===(p.type||'other'))||VIS_TYPES[4];
-      const isPast=new Date(p.date)<new Date(); const canDel=S.user && p.uid === S.user.uid;
+      const isPast=new Date(p.date)<new Date(); 
+      const canDel = S.user && (p.uid === S.user.uid || p.addedBy === myName);
+      
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div><div class="pc2">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1;color:var(--txt)">${p.title}</span></div>
         <div class="p-date" style="color:var(--amber); font-weight:600; font-size:0.8rem">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
@@ -898,7 +907,9 @@ const Visions = {
   add(){
     const t=(document.getElementById('ap-t')||{}).value, d=(document.getElementById('ap-d')||{}).value;
     if(!t.trim()||!d){toast('Vui lòng điền tên dự định và ngày!');return}
-    S.plans.push({id:Date.now(),uid:S.user.uid,title:t.trim(),type:S.planType||'meetup',date:d,desc:document.getElementById('ap-c').value.trim(),addedBy:S.userFullData?.displayName || S.user.email});
+    
+    const myName = S.userFullData?.displayName || S.user.email;
+    S.plans.push({id:Date.now(),uid:S.user.uid,title:t.trim(),type:S.planType||'meetup',date:d,desc:document.getElementById('ap-c').value.trim(),addedBy:myName});
     S.save('plans',S.plans);S.addPlanOpen=false;Visions.render();toast('Đã lưu dự định! ✨');
   },
   delete(id){if(confirm('Xóa dự định này?')){S.plans=S.plans.filter(p=>p.id!==id);S.save('plans',S.plans);Visions.render();toast('Đã xóa.')}}
@@ -915,21 +926,26 @@ const Cal = {
     let grid=`<div class="cal-grid">`; ['CN','T2','T3','T4','T5','T6','T7'].forEach(d=>grid+=`<div class="cdh">${d}</div>`);
     for(let i=0;i<first;i++) grid+=`<div class="cd empty"></div>`;
     const today=new Date().toISOString().split('T')[0];
+    
+    const myName = S.userFullData?.displayName || S.user?.email;
+    
     for(let d=1;d<=count;d++){
       const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const myAv=S.user&&S.avail[S.user.name]&&S.avail[S.user.name][ds];
+      const myAv=S.user&&S.avail[myName]&&S.avail[myName][ds];
       let cls='cd'; if(ds<today)cls+=' past'; if(ds===today)cls+=' today'; if(myAv&&ds>=today)cls+=' my-av'; if(ds===S.selDay)cls+=' selected';
       grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${myAv&&ds>=today?`<div class="cdd" style="background:var(--p)"></div>`:''}</div></div>`;
     }
     grid+=`</div>`;
-    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date" style="color:var(--p)">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[S.user.name]&&S.avail[S.user.name][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
+    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date" style="color:var(--p)">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[myName]&&S.avail[myName][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
     return `<div class="cal-hd"><button class="cal-nav" onclick="Cal.nav(-1)">‹</button><div class="cal-month">${mn[m]} năm ${y}</div><button class="cal-nav" onclick="Cal.nav(1)">›</button></div>${grid}${detail}`;
   },
   selectDay(ds){S.selDay=ds; document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();},
   toggleAv(ds){
-    if(!S.user)return; if(!S.avail[S.user.name])S.avail[S.user.name]={};
-    S.avail[S.user.name][ds]=!S.avail[S.user.name][ds];
-    if(!S.avail[S.user.name][ds])delete S.avail[S.user.name][ds];
+    if(!S.user)return; 
+    const myName = S.userFullData?.displayName || S.user.email;
+    if(!S.avail[myName])S.avail[myName]={};
+    S.avail[myName][ds]=!S.avail[myName][ds];
+    if(!S.avail[myName][ds])delete S.avail[myName][ds];
     S.save('avail',S.avail); this.selectDay(ds);
   },
   nav(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++}if(S.calMonth<0){S.calMonth=11;S.calYear--}S.selDay=null;document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();}
@@ -1013,23 +1029,29 @@ const Profile = {
     event.currentTarget.classList.add('active');
   },
 
-  handleAviUpload(e) {
-    const f=e.target.files[0]; if(!f) return;
-    if(f.size>5*1024*1024){toast('Ảnh quá lớn! Tối đa 5MB ❌');e.target.value='';return}
+  handleAviUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { toast('Ảnh quá lớn! Tối đa 5MB. ❌'); event.target.value = ''; return; }
     toast('Đang tải ảnh lên... ⏳');
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      const base64=ev.target.result.split(',')[1]; const body=new URLSearchParams(); body.append('key',IMGBB_API_KEY); body.append('image',base64);
-      fetch('https://api.imgbb.com/1/upload',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
-      .then(r=>r.json()).then(result=>{
-        if(result.success){
-          S.tempAviUrl = result.data.url; 
-          const aviPreview = document.querySelector('#m-profile .profile-avi');
-          aviPreview.innerHTML = `<img src="${S.tempAviUrl}" style="width:100%;height:100%;object-fit:cover;"> <div class="avi-edit-overlay">Đổi ảnh</div>`;
-          toast('Tải ảnh xong! Nhớ bấm Lưu thay đổi nhé. ✅');
-        }else toast('Lỗi ImgBB ❌');
-      }).catch(()=>toast('Lỗi mạng ❌'));
-    }; reader.readAsDataURL(f); e.target.value='';
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result.split(',')[1];
+      const body = new URLSearchParams();
+      body.append('key', IMGBB_API_KEY);
+      body.append('image', base64);
+      fetch('https://api.imgbb.com/1/upload', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() })
+        .then(response => response.json())
+        .then(result => {
+          if (result.success) {
+            S.tempAviUrl = result.data.url;
+            document.querySelector('#m-profile .profile-avi').innerHTML = `<img src="${S.tempAviUrl}"> <div class="avi-edit-overlay">Đổi ảnh</div>`;
+            toast('Tải ảnh xong! Bấm Lưu để xác nhận. ✅');
+          } else { toast('Lỗi API ImgBB. ❌'); }
+        }).catch(() => { toast('Lỗi mạng. ❌'); });
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
   },
 
   save(){
