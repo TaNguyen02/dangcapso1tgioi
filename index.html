@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TanGuyen02</title>
+<title>GAO Power Edition</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
+<!-- Firebase for shared real-time data -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <style>
@@ -41,7 +42,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .u-name{font-size:.85rem;font-weight:500;color:var(--txt)}
 .btn-so{padding:5px 14px;background:transparent;border:1px solid var(--bdr);border-radius:20px;color:var(--tm);font-size:.75rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr)}
 .btn-so:hover{border-color:var(--rose);color:var(--rose)}
-
+ 
 /* === ORBIT CARDS === */
 #orbit-container{position:fixed;inset:0;z-index:20;pointer-events:none;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,600px) minmax(200px,1fr);grid-template-rows:1fr;padding:100px 40px 60px}
 .sidebar{display:flex;flex-direction:column;justify-content:space-around;gap:20px;pointer-events:none}
@@ -63,7 +64,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .card-text{display:flex;flex-direction:column;text-align:left}
 .c-title{font-size:.95rem;font-weight:600;color:var(--txt);margin-bottom:2px}
 .c-desc{font-size:.7rem;color:var(--tm);font-weight:400}
-
+ 
 /* === OVERLAY & MODALS === */
 #ov{position:fixed;inset:0;z-index:200;background:rgba(5,5,5,.87);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;pointer-events:auto}
 #ov.on{display:flex;animation:fi .2s ease}
@@ -81,7 +82,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .mb::-webkit-scrollbar{width:5px}
 .mb::-webkit-scrollbar-track{background:transparent}
 .mb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
-
+ 
 /* === FORMS === */
 .fg{margin-bottom:16px}
 .fl{display:block;font-size:.72rem;font-weight:600;color:var(--tm);margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
@@ -180,7 +181,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .lbx-cap{margin-top:16px;color:var(--txt);font-family:'DM Serif Display',serif;font-size:1.1rem}
 .lbx-x{position:absolute;top:-52px;right:0;width:40px;height:40px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
 .lbx-x:hover{border-color:var(--rose);color:var(--rose)}
-.lbx-del{position:absolute;top:-52px;left:0;width:40px;height:40px;border:1px solid rgba(239,68,68,.3);border-radius:50%;background:rgba(0,0,0,.6);color:#FCA5A5;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.lbx-del{position:absolute;top:-52px;left:0;width:40px;height:40px;border:1px solid rgba(239,68,68,.35);border-radius:50%;background:rgba(0,0,0,.6);color:#FCA5A5;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
 .lbx-del:hover{border-color:#EF4444;color:#EF4444;background:rgba(239,68,68,.2)}
 .empty-st{text-align:center;padding:40px 20px;color:var(--tm)}
 .empty-ic{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--td);border:1px dashed rgba(255,255,255,.1)}
@@ -240,28 +241,34 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
   <div id="m-lbx"     class="modal lbx" style="width:min(92vw,900px)"></div>
 </div>
 <div id="toast"></div>
-
+ 
 <script>
 // =====================================================
-// FIREBASE CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA
+// FIREBASE — ĐỂ CHIA SẺ DỮ LIỆU THỰC GIỮA BẠN BÈ
+// Bước 1: Vào https://console.firebase.google.com
+// Bước 2: Tạo project mới (miễn phí)
+// Bước 3: Build → Realtime Database → Create database (test mode)
+// Bước 4: Project Settings → Add web app → copy firebaseConfig
+// Bước 5: Dán config vào FIREBASE_CONFIG bên dưới
+// Bước 6: Đổi FIREBASE_ENABLED = true
 // =====================================================
-const FIREBASE_ENABLED = true;
+const FIREBASE_ENABLED = false;
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyAl6bD_3genvVbmCPimE9bZgHlEMDyZOJE",
-  authDomain: "duachungminh.firebaseapp.com",
-  databaseURL: "https://duachungminh-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "duachungminh"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR-PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR-PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR-PROJECT",
+  storageBucket: "YOUR-PROJECT.appspot.com",
+  messagingSenderId: "000000000",
+  appId: "YOUR_APP_ID"
 };
-
+ 
 let fbDB = null;
 if (FIREBASE_ENABLED) {
-  try { 
-    firebase.initializeApp(FIREBASE_CONFIG); 
-    fbDB = firebase.database(); 
-  }
+  try { firebase.initializeApp(FIREBASE_CONFIG); fbDB = firebase.database(); }
   catch(e) { console.warn('Firebase error:', e); }
 }
-
+ 
 // DB Abstraction — tự chọn Firebase hoặc localStorage
 const DB = {
   save(key, val) {
@@ -282,11 +289,13 @@ const DB = {
     });
   }
 };
-
+ 
 // =====================================================
 // DEFAULT DATA
 // =====================================================
-const DEF_STORIES = [];
+const DEF_STORIES = [
+  {id:1,title:"First story on GAO Power",content:"This is where our story begins...\n\nEvery great journey starts with a single step.",author:"Admin",date:"2025-11-20",likes:3,likedBy:[],tags:["welcome","begin"]}
+];
 const DEF_AV = {};
 const MEMBER_COLORS = {};
 const VIS_TYPES = [
@@ -303,7 +312,7 @@ const BOOK_TYPES = [
   {key:'activity',emoji:'🎯',color:'rgba(236,72,153,.25)'},
   {key:'other', emoji:'📌',color:'rgba(255,255,255,.1)'}
 ];
-
+ 
 // =====================================================
 // STATE
 // =====================================================
@@ -326,7 +335,7 @@ const S = {
   save(k,v) { this[k]=v; DB.save(k,v); },
   setUser(u) { this.user=u; u?localStorage.setItem('wx_user',JSON.stringify(u)):localStorage.removeItem('wx_user'); App.updateAuth(); }
 };
-
+ 
 // =====================================================
 // APP CONTROL
 // =====================================================
@@ -353,7 +362,7 @@ const App = {
     else { a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sign In</button>`; }
   }
 };
-
+ 
 // =====================================================
 // AUTH
 // =====================================================
@@ -402,9 +411,9 @@ const Auth = {
   },
   out(){S.setUser(null);toast('Signed out.')}
 };
-
+ 
 // =====================================================
-// POLLS
+// POLLS — replaces Tracks
 // =====================================================
 const Polls = {
   render() {
@@ -428,8 +437,7 @@ const Polls = {
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
-      const canDel=!!S.user;
+      const canDel=S.user&&poll.createdBy===S.user.name;
       return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;margin-bottom:14px">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
@@ -469,154 +477,81 @@ const Polls = {
   },
   delete(id){if(!confirm('Delete this poll?'))return;S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Poll deleted.')}
 };
-
+ 
 // =====================================================
 // STORIES
 // =====================================================
 const Stories = {
-  render(){
-    const el=document.getElementById('m-stories');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Tales</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Cancel':'+ New Tale'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to share a story</div>`:''}
-    <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${Stories.listHTML()}</div></div>`;
-  },
+  render(){const el=document.getElementById('m-stories');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Tales</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Cancel':'+ New Tale'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to share a story</div>`:''}
+  <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${Stories.listHTML()}</div></div>`;},
   pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ New Entry</div>
   <div class="fg"><label class="fl">Title</label><input class="fi" id="sf-t" placeholder="Give your story a name..."></div>
   <div class="fg"><label class="fl">Story</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Begin your tale here..."></textarea></div>
   <div class="fg"><label class="fl">Tags</label><input class="fi" id="sf-g" placeholder="music, nights, memories..."></div>
   <button class="btn-p" onclick="Stories.post()">Publish Story</button></div>`},
-  listHTML(){
-    let arr = [];
-    if (Array.isArray(S.stories)) { arr = S.stories; }
-    else if (typeof S.stories === 'object' && S.stories !== null) { arr = Object.values(S.stories); }
-
-    if(!arr.length) return`<div class="empty-st"><p>No stories yet.</p></div>`;
-
-    return arr.slice().reverse().map(s=>{
-      const author = s.author || 'Unknown';
-      const ini = author.substring(0,2).toUpperCase();
-      const likedBy = s.likedBy || []; 
-      const likes = s.likes || 0;
-      const liked = S.user && likedBy.includes(S.user.name);
-      const tags = s.tags || [];
-      const content = s.content || '';
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
-      const canDel = !!S.user;
-
-      return`<div class="story-card" onclick="Stories.detail(${s.id})">
-        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
-          <div class="sc-title" style="margin-bottom:0">${s.title}</div>
-          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">Delete</button>`:''}
-        </div>
-        <div class="sc-excerpt">${content.replace(/\n/g,' ').substring(0,120)}...</div>
-        <div class="sc-meta"><div class="sc-author"><div class="sc-avi">${ini}</div>${author} · ${s.date}</div><button class="lbtn ${liked?'liked':''}" onclick="event.stopPropagation();Stories.like(${s.id})">♥ ${likes}</button></div>${tags.length?`<div class="tags-row" style="margin-top:10px">${tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>`:''}</div>`;
-    }).join('')
-  },
+  listHTML(){if(!S.stories.length)return`<div class="empty-st"><p>No stories yet.</p></div>`;return S.stories.slice().reverse().map(s=>{const ini=s.author.substring(0,2).toUpperCase();const liked=S.user&&s.likedBy.includes(S.user.name);return`<div class="story-card" onclick="Stories.detail(${s.id})"><div class="sc-title">${s.title}</div><div class="sc-excerpt">${s.content.replace(/\n/g,' ').substring(0,120)}...</div><div class="sc-meta"><div class="sc-author"><div class="sc-avi">${ini}</div>${s.author} · ${s.date}</div><button class="lbtn ${liked?'liked':''}" onclick="event.stopPropagation();Stories.like(${s.id})">♥ ${s.likes}</button></div>${s.tags&&s.tags.length?`<div class="tags-row" style="margin-top:10px">${s.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>`:''}</div>`;}).join('')},
   togglePost(){S.postOpen=!S.postOpen;Stories.render()},
-  post(){
-    const t=(document.getElementById('sf-t')||{}).value||'';
-    const c=(document.getElementById('sf-c')||{}).value||'';
-    if(!t.trim()||!c.trim()){toast('Fill title and story!');return}
-    const tags=((document.getElementById('sf-g')||{}).value||'').split(',').map(x=>x.trim()).filter(Boolean);
-    
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-
-    S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0],likes:0,likedBy:[],tags});
-    S.save('stories',S.stories);
-    S.postOpen=false;
-    Stories.render();
-    toast('Published! ✨')
-  },
-  like(id){
-    if(!S.user){toast('Sign in to like');return}
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-    const s=S.stories.find(x=>x.id===id);
-    if(!s)return;
-    if(!s.likedBy) s.likedBy = [];
-    const i=s.likedBy.indexOf(S.user.name);
-    if(i>-1){s.likedBy.splice(i,1);s.likes=Math.max(0,(s.likes||0)-1)}
-    else{s.likedBy.push(S.user.name);s.likes=(s.likes||0)+1}
-    S.save('stories',S.stories);
-    document.getElementById('sl').innerHTML=Stories.listHTML()
-  },
-  detail(id){
-    if(!Array.isArray(S.stories)) return;
-    const s=S.stories.find(x=>x.id===id);
-    if(s)App.openOver('story',s)
-  },
-  renderDetail(s){
-    const content = s.content || '';
-    document.getElementById('m-story').innerHTML=`<div class="mh"><div class="mt" style="font-size:1.15rem;flex:1">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div><div class="mb"><div class="sfull">${content.replace(/\n/g,'<br>')}</div><div class="sfull-meta"><div>By ${s.author}</div><div>${s.date}</div></div></div>`
-  },
-  delete(id) {
-    if(!confirm('Are you sure you want to delete this tale?')) return;
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-    S.stories = S.stories.filter(s => s.id !== id);
-    S.save('stories', S.stories);
-    Stories.render();
-    toast('Tale deleted. 🗑️');
-  }
+  post(){const t=(document.getElementById('sf-t')||{}).value||'';const c=(document.getElementById('sf-c')||{}).value||'';if(!t.trim()||!c.trim()){toast('Fill title and story!');return}const tags=((document.getElementById('sf-g')||{}).value||'').split(',').map(x=>x.trim()).filter(Boolean);S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0],likes:0,likedBy:[],tags});S.save('stories',S.stories);S.postOpen=false;Stories.render();toast('Published! ✨')},
+  like(id){if(!S.user){toast('Sign in to like');return}const s=S.stories.find(x=>x.id===id);if(!s)return;const i=s.likedBy.indexOf(S.user.name);if(i>-1){s.likedBy.splice(i,1);s.likes=Math.max(0,s.likes-1)}else{s.likedBy.push(S.user.name);s.likes++}S.save('stories',S.stories);document.getElementById('sl').innerHTML=Stories.listHTML()},
+  detail(id){const s=S.stories.find(x=>x.id===id);if(s)App.openOver('story',s)},
+  renderDetail(s){document.getElementById('m-story').innerHTML=`<div class="mh"><div class="mt" style="font-size:1.15rem;flex:1">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div><div class="mb"><div class="sfull">${s.content.replace(/\n/g,'<br>')}</div><div class="sfull-meta"><div>By ${s.author}</div><div>${s.date}</div></div></div>`}
 };
-
+ 
 // =====================================================
-// GALLERY (ĐÃ TÍCH HỢP IMGBB API BẠN CUNG CẤP)
+// GALLERY
 // =====================================================
-const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ec";
-
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Gallery</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Add Photo</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
   <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to add photos</div>`:''}
   <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
-  ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc" onclick="Gallery.lbx(${p.id})"><img src="${p.url}" loading="lazy"><div class="pc-ov"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div></div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
+  ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-ov" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s,opacity .15s;opacity:.85" onmouseover="this.style.transform='scale(1.18)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
   </div>`;},
   upload(){document.getElementById('gfup').click()},
-  
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
+    // Kiểm tra dung lượng (giới hạn ImgBB 32MB)
+    if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
     const cap=prompt('Caption:','')||'A new memory';
-    toast('Đang tải ảnh lên máy chủ... ⏳');
-    
-    const formData = new FormData();
-    formData.append('image', f);
-
-    fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData })
-    .then(response => response.json())
-    .then(result => {
-      if(result.success) {
-        const url = result.data.url;
-        if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
-        S.photos.push({ id: Date.now(), url: url, cap: cap.trim(), by: S.user.name, date: new Date().toISOString().split('T')[0] });
-        S.save('photos', S.photos);
-        Gallery.render();
-        toast('Photo added! 📸');
-      } else { toast('Lỗi khi tải ảnh lên ImgBB! ❌'); }
-    })
-    .catch(err => { console.error(err); toast('Lỗi kết nối mạng! ❌'); });
-
+    toast('Đang tải ảnh lên... ⏳');
+    // Đọc file thành base64 — ImgBB yêu cầu định dạng này
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const base64=ev.target.result.split(',')[1]; // bỏ phần "data:image/...;base64,"
+      // Gửi dạng URL-encoded (ổn định hơn FormData với ImgBB)
+      const body=new URLSearchParams();
+      body.append('key',IMGBB_API_KEY);
+      body.append('image',base64);
+      fetch('https://api.imgbb.com/1/upload',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:body.toString()
+      })
+      .then(r=>r.json())
+      .then(result=>{
+        if(result.success){
+          if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
+          S.photos.push({id:Date.now(),url:result.data.url,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});
+          S.save('photos',S.photos);Gallery.render();toast('Photo added! 📸');
+        }else{
+          const msg=result.error?.message||'Kiểm tra lại API key';
+          toast('ImgBB: '+msg+' ❌');
+          console.error('ImgBB error:',result);
+        }
+      })
+      .catch(err=>{console.error(err);toast('Lỗi kết nối! Thử lại ❌')});
+    };
+    reader.onerror=()=>toast('Không đọc được file ❌');
+    reader.readAsDataURL(f);
     e.target.value='';
   },
   lbx(id){App.openOver('lbx',S.photos.find(x=>x.id===id))},
-  renderLbx(p){
-    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA ẢNH
-    document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner">
-      <button class="lbx-x" onclick="App.back()">✕</button>
-      ${!!S.user ? `<button class="lbx-del" onclick="Gallery.delete(${p.id})">🗑️</button>` : ''}
-      <img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div>
-    </div>`
-  },
-  delete(id){
-    if(!confirm('Xóa bức ảnh này nhé?')) return;
-    if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
-    S.photos = S.photos.filter(x => x.id !== id);
-    S.save('photos', S.photos);
-    App.back();
-    Gallery.render();
-    toast('Photo deleted. 🗑️');
-  }
+  renderLbx(p){document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner"><button class="lbx-x" onclick="App.back()">✕</button>${S.user?`<button class="lbx-del" onclick="Gallery.delete(${p.id})" title="Xoa anh">🗑️</button>`:''}<img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div></div>`},
+  delete(id){if(!confirm('Xoa buc anh nay?'))return;if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});S.photos=S.photos.filter(x=>x.id!==id);S.save('photos',S.photos);const cur=S.stack[S.stack.length-1];if(cur==='lbx')App.back();else Gallery.render();toast('Photo deleted.')}
 };
-
+ 
 // =====================================================
-// VISIONS
+// VISIONS — with add plan form
 // =====================================================
 const Visions = {
   render(){
@@ -656,8 +591,7 @@ const Visions = {
       const d=new Date(p.date+'T00:00:00');
       const ds=d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
       const isPast=d<new Date();
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
-      const canDel=!!S.user;
+      const canDel=S.user&&S.user.name===p.addedBy;
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div>
         <div class="pc2">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
@@ -684,16 +618,16 @@ const Visions = {
   },
   delete(id){if(!confirm('Delete this vision?'))return;S.plans=S.plans.filter(p=>p.id!==id);S.save('plans',S.plans);Visions.render();toast('Vision removed.')}
 };
-
+ 
 // =====================================================
-// CALENDAR
+// CALENDAR — with availability + booking
 // =====================================================
 const Cal = {
   btypes:{meetup:'👥',travel:'✈️',event:'🎉',activity:'🎯',other:'📌'},
   bcolors:{meetup:'rgba(139,92,246,.25)',travel:'rgba(16,185,129,.25)',event:'rgba(245,158,11,.25)',activity:'rgba(236,72,153,.25)',other:'rgba(255,255,255,.1)'},
-
+ 
   render(){document.getElementById('m-calendar').innerHTML=`<div class="mh"><div class="mt">Calendar</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div><div class="mb">${Cal.bodyHTML()}</div>`},
-
+ 
   bodyHTML(){
     const y=S.calYear,m=S.calMonth;
     const mn=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -722,7 +656,7 @@ const Cal = {
     <div class="cal-legend"><div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div>You're free</div><div class="cl-item"><div class="cl-dot" style="background:rgba(255,255,255,.7)"></div>Booked</div></div>
     ${grid}${detail}<div id="book-form-c"></div>${upcoming}`;
   },
-
+ 
   dayDetail(ds){
     const d=new Date(ds+'T00:00:00');const label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
     const today=new Date().toISOString().split('T')[0];const isPast=ds<today;
@@ -730,12 +664,11 @@ const Cal = {
     const allFree=Object.entries(S.avail).filter(([n,v])=>v[ds]).map(([n])=>n);
     const books=(S.bookings||[]).filter(b=>b.date===ds);
     const avHTML=allFree.length?`<div style="margin-bottom:10px"><span style="font-size:.78rem;color:var(--tm)">Free: </span>${allFree.map(n=>`<span style="color:${n===S.user?.name?'var(--amber)':'var(--pl)'};font-weight:600;margin-right:6px;font-size:.82rem">${n}</span>`).join('')}</div>`:`<div style="color:var(--td);font-size:.8rem;margin-bottom:10px">Nobody marked as free yet.</div>`;
-    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA BOOKING
-    const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${!!S.user ? `<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
+    const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${S.user&&b.createdBy===S.user.name?`<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
     const actions=!isPast&&S.user?`<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-s" style="flex:1" onclick="Cal.toggleAv('${ds}')">${myAv?'✓ I\'m Free (click to remove)':'📍 Mark Me as Free'}</button><button style="flex:1;padding:9px 20px;background:var(--pd);border:1px solid var(--bdrh);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)" onmouseover="this.style.background='var(--pb)'" onmouseout="this.style.background='var(--pd)'" onclick="Cal.openBookForm('${ds}')">📌 Book Event</button></div>`:!S.user?`<button class="btn-p" style="margin-top:10px" onclick="App.open('auth')">Sign in to book or mark availability</button>`:'';
     return`<div class="cal-info" style="margin-bottom:10px"><div class="cal-info-date">${label}</div>${avHTML}${booksHTML}${actions}</div>`;
   },
-
+ 
   openBookForm(ds){
     document.getElementById('book-form-c').innerHTML=`<div class="post-box" style="margin-top:0">
     <div class="post-box-title">📌 Book Event — ${ds}</div>
@@ -751,7 +684,7 @@ const Cal = {
     </div>`;
     S.bookType='meetup';Cal.selectBType('meetup');
   },
-
+ 
   selectBType(type){
     S.bookType=type;
     document.querySelectorAll('[data-btype]').forEach(b=>{
@@ -760,7 +693,7 @@ const Cal = {
       b.style.color=b.dataset.btype===type?'var(--txt)':'var(--tm)';
     });
   },
-
+ 
   saveBooking(ds){
     const title=(document.getElementById('bk-title')||{}).value||'';if(!title.trim()){toast('Please add a title.');return}
     const time=(document.getElementById('bk-time')||{}).value||'';const notes=(document.getElementById('bk-notes')||{}).value||'';
@@ -768,9 +701,9 @@ const Cal = {
     if(!S.bookings)S.bookings=[];S.bookings.push(booking);S.save('bookings',S.bookings);
     toast('Event booked! 📌');document.getElementById('book-form-c').innerHTML='';Cal.selectDay(ds);
   },
-
+ 
   deleteBooking(id){if(!confirm('Remove this booking?'))return;S.bookings=S.bookings.filter(b=>b.id!==id);S.save('bookings',S.bookings);Cal.selectDay(S.selDay);},
-
+ 
   toggleAv(ds){
     if(!S.user){toast('Sign in first.');return}
     if(!S.avail[S.user.name])S.avail[S.user.name]={};
@@ -778,9 +711,9 @@ const Cal = {
     if(!S.avail[S.user.name][ds])delete S.avail[S.user.name][ds];
     S.save('avail',S.avail);Cal.selectDay(ds);
   },
-
+ 
   selectDay(ds){S.selDay=ds;const mb=document.querySelector('#m-calendar .mb');if(mb)mb.innerHTML=Cal.bodyHTML()},
-
+ 
   upcomingHTML(){
     const today=new Date().toISOString().split('T')[0];
     const up=(S.bookings||[]).filter(b=>b.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
@@ -792,11 +725,11 @@ const Cal = {
       <div style="flex:1;min-width:0"><div style="font-weight:600;color:var(--txt);font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time||'All day'} · ${b.createdBy}</div></div>
     </div>`).join('')}</div>`;
   },
-
+ 
   getDays(y,m){const first=new Date(y,m,1).getDay(),count=new Date(y,m+1,0).getDate(),arr=[];for(let i=0;i<first;i++)arr.push(null);for(let d=1;d<=count;d++)arr.push(d);return arr},
   nav(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++}if(S.calMonth<0){S.calMonth=11;S.calYear--}S.selDay=null;const mb=document.querySelector('#m-calendar .mb');if(mb)mb.innerHTML=Cal.bodyHTML()}
 };
-
+ 
 // =====================================================
 // PROFILE
 // =====================================================
@@ -819,13 +752,13 @@ const Profile = {
     </div>`;
   }
 };
-
+ 
 // =====================================================
 // TOAST
 // =====================================================
 let toastT;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),2800)}
-
+ 
 // =====================================================
 // FIREBASE REAL-TIME SYNC
 // =====================================================
@@ -836,6 +769,7 @@ function initFirebaseSync(){
       if(val===null)return;
       const cur=S.stack[S.stack.length-1];
       S[key]=val;
+      // Re-render active modal if user not currently typing
       if(cur&&document.activeElement&&!document.activeElement.classList.contains('fi')&&!document.activeElement.classList.contains('fta')){
         const el=document.getElementById('m-'+cur);
         if(el&&el.classList.contains('on'))App.render(cur);
@@ -843,14 +777,14 @@ function initFirebaseSync(){
     });
   });
 }
-
+ 
 // =====================================================
 // BOOT
 // =====================================================
 S.load();
-App.updateAuth(); 
+App.updateAuth();
 initFirebaseSync();
 </script>
 </body>
 </html>
-"Tân, Hồng, Trang, Quyết"
+ 
