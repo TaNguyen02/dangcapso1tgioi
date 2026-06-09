@@ -124,7 +124,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .tags-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 /* Gallery */
 .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;cursor:pointer;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05)}
+.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05)}
 .pc img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .pc:hover img{transform:scale(1.08)}
 .pc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.9) 0%,transparent 60%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:12px}
@@ -428,7 +428,6 @@ const Polls = {
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
       const canDel=!!S.user;
       return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;margin-bottom:14px">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
@@ -500,7 +499,6 @@ const Stories = {
       const liked = S.user && likedBy.includes(S.user.name);
       const tags = s.tags || [];
       const content = s.content || '';
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
       const canDel = !!S.user;
 
       return`<div class="story-card" onclick="Stories.detail(${s.id})">
@@ -559,7 +557,7 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY (ĐÃ TÍCH HỢP IMGBB API BẠN CUNG CẤP)
+// GALLERY (ĐÃ THÊM API MỚI VÀ HÀM CỦA BẠN)
 // =====================================================
 const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ecf";
 
@@ -567,52 +565,49 @@ const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Gallery</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Add Photo</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
   <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to add photos</div>`:''}
   <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
-  ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc" onclick="Gallery.lbx(${p.id})"><img src="${p.url}" loading="lazy"><div class="pc-ov"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div></div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
+  ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-ov" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s,opacity .15s;opacity:.85" onmouseover="this.style.transform='scale(1.18)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
   </div>`;},
   upload(){document.getElementById('gfup').click()},
-  
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
+    // Kiểm tra dung lượng (giới hạn ImgBB 32MB)
+    if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
     const cap=prompt('Caption:','')||'A new memory';
-    toast('Đang tải ảnh lên máy chủ... ⏳');
-    
-    const formData = new FormData();
-    formData.append('image', f);
-
-    fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData })
-    .then(response => response.json())
-    .then(result => {
-      if(result.success) {
-        const url = result.data.url;
-        if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
-        S.photos.push({ id: Date.now(), url: url, cap: cap.trim(), by: S.user.name, date: new Date().toISOString().split('T')[0] });
-        S.save('photos', S.photos);
-        Gallery.render();
-        toast('Photo added! 📸');
-      } else { toast('Lỗi khi tải ảnh lên ImgBB! ❌'); }
-    })
-    .catch(err => { console.error(err); toast('Lỗi kết nối mạng! ❌'); });
-
+    toast('Đang tải ảnh lên... ⏳');
+    // Đọc file thành base64 — ImgBB yêu cầu định dạng này
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const base64=ev.target.result.split(',')[1]; // bỏ phần "data:image/...;base64,"
+      // Gửi dạng URL-encoded (ổn định hơn FormData với ImgBB)
+      const body=new URLSearchParams();
+      body.append('key',IMGBB_API_KEY);
+      body.append('image',base64);
+      fetch('https://api.imgbb.com/1/upload',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:body.toString()
+      })
+      .then(r=>r.json())
+      .then(result=>{
+        if(result.success){
+          if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
+          S.photos.push({id:Date.now(),url:result.data.url,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});
+          S.save('photos',S.photos);Gallery.render();toast('Photo added! 📸');
+        }else{
+          const msg=result.error?.message||'Kiểm tra lại API key';
+          toast('ImgBB: '+msg+' ❌');
+          console.error('ImgBB error:',result);
+        }
+      })
+      .catch(err=>{console.error(err);toast('Lỗi kết nối! Thử lại ❌')});
+    };
+    reader.onerror=()=>toast('Không đọc được file ❌');
+    reader.readAsDataURL(f);
     e.target.value='';
   },
   lbx(id){App.openOver('lbx',S.photos.find(x=>x.id===id))},
-  renderLbx(p){
-    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA ẢNH
-    document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner">
-      <button class="lbx-x" onclick="App.back()">✕</button>
-      ${!!S.user ? `<button class="lbx-del" onclick="Gallery.delete(${p.id})">🗑️</button>` : ''}
-      <img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div>
-    </div>`
-  },
-  delete(id){
-    if(!confirm('Xóa bức ảnh này nhé?')) return;
-    if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
-    S.photos = S.photos.filter(x => x.id !== id);
-    S.save('photos', S.photos);
-    App.back();
-    Gallery.render();
-    toast('Photo deleted. 🗑️');
-  }
+  renderLbx(p){document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner"><button class="lbx-x" onclick="App.back()">✕</button>${S.user?`<button class="lbx-del" onclick="Gallery.delete(${p.id})" title="Xoa anh">🗑️</button>`:''}<img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div></div>`},
+  delete(id){if(!confirm('Xoa buc anh nay?'))return;if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});S.photos=S.photos.filter(x=>x.id!==id);S.save('photos',S.photos);const cur=S.stack[S.stack.length-1];if(cur==='lbx')App.back();else Gallery.render();toast('Photo deleted.')}
 };
 
 // =====================================================
@@ -656,7 +651,6 @@ const Visions = {
       const d=new Date(p.date+'T00:00:00');
       const ds=d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
       const isPast=d<new Date();
-      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
       const canDel=!!S.user;
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div>
         <div class="pc2">
@@ -730,7 +724,6 @@ const Cal = {
     const allFree=Object.entries(S.avail).filter(([n,v])=>v[ds]).map(([n])=>n);
     const books=(S.bookings||[]).filter(b=>b.date===ds);
     const avHTML=allFree.length?`<div style="margin-bottom:10px"><span style="font-size:.78rem;color:var(--tm)">Free: </span>${allFree.map(n=>`<span style="color:${n===S.user?.name?'var(--amber)':'var(--pl)'};font-weight:600;margin-right:6px;font-size:.82rem">${n}</span>`).join('')}</div>`:`<div style="color:var(--td);font-size:.8rem;margin-bottom:10px">Nobody marked as free yet.</div>`;
-    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA BOOKING
     const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${!!S.user ? `<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
     const actions=!isPast&&S.user?`<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-s" style="flex:1" onclick="Cal.toggleAv('${ds}')">${myAv?'✓ I\'m Free (click to remove)':'📍 Mark Me as Free'}</button><button style="flex:1;padding:9px 20px;background:var(--pd);border:1px solid var(--bdrh);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)" onmouseover="this.style.background='var(--pb)'" onmouseout="this.style.background='var(--pd)'" onclick="Cal.openBookForm('${ds}')">📌 Book Event</button></div>`:!S.user?`<button class="btn-p" style="margin-top:10px" onclick="App.open('auth')">Sign in to book or mark availability</button>`:'';
     return`<div class="cal-info" style="margin-bottom:10px"><div class="cal-info-date">${label}</div>${avHTML}${booksHTML}${actions}</div>`;
@@ -853,3 +846,4 @@ initFirebaseSync();
 </script>
 </body>
 </html>
+"Tân, Hồng, Trang, Quyết"
